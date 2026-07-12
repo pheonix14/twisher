@@ -5,117 +5,162 @@
     <title>Wish.jar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Retro Java Game Aesthetics */
-        body { 
-            background-color: #000; 
-            color: #fff; 
-            font-family: "Courier New", Courier, monospace;
-            image-rendering: pixelated;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-        /* The Pixel Cake Container */
-        .game-canvas {
-            width: 200px;
-            height: 200px;
-            border: 4px solid #fff;
+        body { 
+            background-color: #1a1a1a; 
+            color: #fff; 
+            font-family: 'Press Start 2P', cursive;
+            image-rendering: pixelated;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Retro Handheld Screen Container */
+        .handheld-screen {
+            width: 280px;
+            height: 280px;
             background: #000;
+            border: 10px solid #333;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,255,0,0.1);
         }
 
-        /* Pixel Candle */
+        /* Scanline Overlay Effect */
+        .handheld-screen::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Pixel Cake Components */
+        .cake-container { cursor: pointer; transform: scale(1.5); }
+
         #candle {
-            width: 8px;
-            height: 20px;
+            width: 6px; height: 16px;
             background: #fff;
-            margin-bottom: 2px;
+            margin: 0 auto;
             position: relative;
         }
 
-        /* Pixel Flame (Hidden by default) */
         #flame {
-            width: 8px;
-            height: 8px;
-            background: #fff;
+            width: 6px; height: 6px;
+            background: #ffae00; /* Retro Orange */
             position: absolute;
-            top: -10px;
-            left: 0;
+            top: -8px; left: 0;
             display: none;
-            animation: blink 0.2s steps(2) infinite;
+            box-shadow: 0 0 5px #ffae00;
+            animation: flicker 0.1s steps(2) infinite;
         }
 
-        /* Pixel Cake Base */
         .cake-body {
-            width: 60px;
-            height: 40px;
+            width: 48px; height: 32px;
             border: 4px solid #fff;
             background: #000;
             position: relative;
         }
 
-        .frosting-line {
-            width: 100%;
-            height: 8px;
-            border-bottom: 4px solid #fff;
+        .cake-detail {
+            position: absolute;
+            top: 8px; left: 0;
+            width: 100%; height: 4px;
+            background: #fff;
         }
 
-        @keyframes blink {
-            from { opacity: 1; }
-            to { opacity: 0; }
+        @keyframes flicker {
+            0% { transform: translate(1px, 0); opacity: 1; }
+            100% { transform: translate(-1px, -1px); opacity: 0.8; }
         }
 
-        .pixel-btn {
-            border: 2px solid #fff;
-            padding: 5px 15px;
-            text-transform: uppercase;
-            font-size: 12px;
-            margin-top: 20px;
+        /* Retro Buttons (A / B Style) */
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 40px;
         }
+
+        .btn-round {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: #8b0000;
+            border: 4px solid #4a0000;
+            color: rgba(255,255,255,0.5);
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 #333;
+            cursor: pointer;
+        }
+
+        .btn-round:active { transform: translateY(2px); box-shadow: 0 2px 0 #333; }
+        .btn-round:disabled { filter: grayscale(1); cursor: not-allowed; opacity: 0.3; }
+
+        #tap-msg {
+            font-size: 8px;
+            color: #0f0; /* Matrix Green */
+            margin-top: 30px;
+            letter-spacing: 2px;
+            animation: blink 0.8s steps(2) infinite;
+        }
+
+        @keyframes blink { to { opacity: 0; } }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
+<body>
 
-    <div class="game-canvas" id="click-area">
-        <div class="flex flex-col items-center pointer-events-none">
-            <div id="candle">
-                <div id="flame"></div>
-            </div>
-            <div class="cake-body">
-                <div class="frosting-line"></div>
-            </div>
+    <div class="handheld-screen">
+        <div class="cake-container" onclick="ignite()">
+            <div id="candle"><div id="flame"></div></div>
+            <div class="cake-body"><div class="cake-detail"></div></div>
         </div>
-
-        <p id="instruction" class="absolute bottom-4 text-[10px] tracking-widest uppercase">tap it</p>
+        <p id="tap-msg">TAP IT</p>
     </div>
 
-    <div class="flex gap-10 mt-10">
-        <button onclick="navigate('prev')" class="text-xs uppercase hover:underline">Exit</button>
-        <button onclick="navigate('next')" id="next-btn" class="text-xs uppercase opacity-20" disabled>Next</button>
+    <div class="controls">
+        <div class="flex flex-col items-center gap-2">
+            <button onclick="navigate('prev')" class="btn-round">B</button>
+            <span class="text-[8px] opacity-40">EXIT</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+            <button onclick="navigate('next')" id="next-btn" class="btn-round" disabled>A</button>
+            <span class="text-[8px] opacity-40">NEXT</span>
+        </div>
     </div>
 
     <script src="engine.js"></script>
     <script>
-        const clickArea = document.getElementById('click-area');
-        const flame = document.getElementById('flame');
-        const instruction = document.getElementById('instruction');
-        const nextBtn = document.getElementById('next-btn');
+        function ignite() {
+            const flame = document.getElementById('flame');
+            const msg = document.getElementById('tap-msg');
+            const nextBtn = document.getElementById('next-btn');
 
-        // Robust Tap/Click Listener
-        clickArea.addEventListener('click', function() {
-            // Ignition Logic
             flame.style.display = 'block';
-            instruction.innerText = "wish made";
+            msg.style.color = '#fff';
+            msg.innerText = "DONE!";
+            msg.style.animation = "none";
             
-            // Enable Next Page
-            nextBtn.style.opacity = "1";
+            // Enable A Button
             nextBtn.disabled = false;
-            
-            // Subtle Vibration for Java feel
-            if (navigator.vibrate) navigator.vibrate(50);
-        });
+            nextBtn.style.background = "#008000"; // Turn Green
+            nextBtn.style.borderColor = "#004d00";
+
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
     </script>
 </body>
 </html>

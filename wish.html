@@ -2,32 +2,109 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Happy Birthday!</title>
+    <title>Happy Birthday! 🎉</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@900&family=Pacifico&display=swap" rel="stylesheet">
+    
     <style>
-        .heart { position: absolute; bottom: -50px; animation: floatUp 5s linear infinite; }
-        @keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }
+        /* --- 1. Custom Typography --- */
+        .font-hero { font-family: 'Montserrat', sans-serif; letter-spacing: -2px; }
+        .font-cursive { font-family: 'Dancing Script', cursive; }
+        .font-accent { font-family: 'Pacifico', cursive; }
+
+        /* --- 2. Advanced Animations --- */
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .animate-pop { animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
+
+        @keyframes bg-glow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        body { 
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: bg-glow 15s ease infinite;
+        }
+
+        .heart { position: absolute; bottom: -100px; animation: floatUp 6s linear infinite; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+        @keyframes floatUp { 
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-130vh) rotate(360deg) scale(1.5); opacity: 0; } 
+        }
+
+        /* --- 3. Glass Card --- */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center text-white text-center overflow-hidden transition-all duration-1000">
+
     <div id="hearts" class="absolute inset-0 pointer-events-none"></div>
-    <div class="z-10 p-12 bg-white/10 backdrop-blur-2xl rounded-[60px] border border-white/20 shadow-2xl">
-        <h1 class="text-7xl font-black mb-4">🎉 HAPPY BIRTHDAY!</h1>
-        <p class="text-2xl italic opacity-80 mb-10">You're one in a million.</p>
-        <div class="flex gap-4 justify-center">
-            <button onclick="navigate('prev')" class="px-8 py-3 rounded-full border border-white/20">Back</button>
-            <button onclick="navigate('next')" class="px-10 py-3 rounded-full bg-white text-black font-black hover:scale-110 transition">Continue →</button>
+
+    <div class="z-10 p-10 md:p-20 glass-container rounded-[4rem] max-w-3xl mx-4">
+        
+        <h1 id="wish-title" class="font-hero text-6xl md:text-8xl mb-4 animate-pop italic uppercase leading-tight" style="animation-delay: 0.2s;">
+            🎉 HAPPY BIRTHDAY!
+        </h1>
+
+        <p id="wish-subtext" class="font-cursive text-3xl md:text-4xl opacity-90 mb-12 animate-pop" style="animation-delay: 0.6s;">
+            You're truly one in a million...
+        </p>
+
+        <div class="flex flex-col md:flex-row gap-6 justify-center items-center animate-pop" style="animation-delay: 1s;">
+            <button onclick="navigate('prev')" class="px-10 py-4 rounded-full border-2 border-white/30 hover:bg-white/10 transition-all font-bold uppercase tracking-widest text-xs">
+                ← Replay
+            </button>
+            <button onclick="navigate('next')" class="px-14 py-5 rounded-full bg-white text-black font-black text-lg hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                SURPRISE NEXT →
+            </button>
         </div>
     </div>
+
     <script src="engine.js"></script>
     <script>
-        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+        // 1. Initial Blast
+        const end = Date.now() + (3 * 1000); // 3 seconds of confetti
+        (function frame() {
+            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        }());
+
+        // 2. Continuous Floating Elements
+        const symbols = ['❤️', '✨', '🎈', '🎂', '💖'];
         setInterval(() => {
-            const h = document.createElement('div'); h.className='heart text-3xl'; h.innerText='❤️';
-            h.style.left=Math.random()*100+'vw'; h.style.animationDuration=(Math.random()*2+3)+'s';
-            document.getElementById('hearts').appendChild(h); setTimeout(()=>h.remove(),5000);
-        }, 400);
+            const h = document.createElement('div'); 
+            h.className = 'heart text-4xl select-none'; 
+            h.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            h.style.left = Math.random() * 100 + 'vw'; 
+            h.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            h.style.opacity = Math.random();
+            document.getElementById('hearts').appendChild(h); 
+            setTimeout(() => h.remove(), 7000);
+        }, 300);
+
+        // 3. Neon Sync (Optional)
+        async function loadCustomWish() {
+            try {
+                const res = await fetch('/.netlify/functions/update-config');
+                const data = await res.json();
+                if(data.custom_wish) document.getElementById('wish-title').innerText = data.custom_wish;
+                if(data.theme_color) document.body.style.background = `linear-gradient(45deg, ${data.theme_color}, #000)`;
+            } catch(e) { console.log("Using default wish settings"); }
+        }
+        loadCustomWish();
     </script>
 </body>
 </html>

@@ -2,24 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>...</title>
+    <title>Wait for it...</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .full-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; object-cover: cover; z-index: 999; }
+    </style>
 </head>
 <body class="bg-black min-h-screen flex items-center justify-center overflow-hidden">
-    <div id="scare-wrap" class="fixed inset-0 hidden">
-        <video id="v" class="w-full h-full object-cover" playsinline></video>
-    </div>
+
+    <video id="v" class="full-screen hidden" playsinline></video>
+    
+    <img id="i" class="full-screen hidden">
+
     <script>
-        const data = localStorage.getItem('jumpMedia');
-        setTimeout(() => {
-            if(!data) { window.location.href="index.html"; return; }
-            document.getElementById('scare-wrap').classList.remove('hidden');
-            const v = document.getElementById('v');
-            v.src = data;
-            v.play();
-            // Go to gallery after 4 seconds
-            setTimeout(() => window.location.href="gallery.html", 4000);
-        }, 2000);
+        const API_URL = '/.netlify/functions/update-config';
+
+        async function triggerScare() {
+            try {
+                // 1. Fetch the URL from Neon
+                const res = await fetch(API_URL);
+                const config = await res.json();
+                const mediaUrl = config.jump_url; // Ensure this matches your Neon column name
+
+                if (!mediaUrl) {
+                    console.error("No jumpscare media found in DB");
+                    setTimeout(() => window.location.href = "gallery.html", 1000);
+                    return;
+                }
+
+                // 2. Wait 2 seconds for suspense
+                setTimeout(() => {
+                    const isVideo = mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+                    
+                    if (isVideo) {
+                        const v = document.getElementById('v');
+                        v.src = mediaUrl;
+                        v.classList.remove('hidden');
+                        
+                        // Try to play. Note: If this fails, it's usually browser policy.
+                        // Pro-tip: The user clicking "Wish" or "Start" on previous pages 
+                        // usually counts as the required interaction.
+                        v.play().catch(err => {
+                            console.log("Autoplay blocked. Muting to force play.");
+                            v.muted = true;
+                            v.play();
+                        });
+                    } else {
+                        // Handle as Image
+                        const img = document.getElementById('i');
+                        img.src = mediaUrl;
+                        img.classList.remove('hidden');
+                    }
+
+                    // 3. Shake effect (Optional)
+                    document.body.classList.add('animate-ping');
+
+                    // 4. Redirect to Gallery after 4 seconds
+                    setTimeout(() => window.location.href = "gallery.html", 4000);
+                }, 2000);
+
+            } catch (err) {
+                console.error("Scare failed:", err);
+                window.location.href = "gallery.html";
+            }
+        }
+
+        triggerScare();
     </script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+{
+  "name": "wisher-web-studio",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^1.4.0"
+  }
+}
