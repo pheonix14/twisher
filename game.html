@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wish.jar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Retro Java Game Aesthetics */
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: "Courier New", Courier, monospace;
+            image-rendering: pixelated;
+        }
+
+        /* The Pixel Cake Container */
+        .game-canvas {
+            width: 200px;
+            height: 200px;
+            border: 4px solid #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #000;
+        }
+
+        /* Pixel Candle */
+        #candle {
+            width: 8px;
+            height: 20px;
+            background: #fff;
+            margin-bottom: 2px;
+            position: relative;
+        }
+
+        /* Pixel Flame (Hidden by default) */
+        #flame {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            position: absolute;
+            top: -10px;
+            left: 0;
+            display: none;
+            animation: blink 0.2s steps(2) infinite;
+        }
+
+        /* Pixel Cake Base */
+        .cake-body {
+            width: 60px;
+            height: 40px;
+            border: 4px solid #fff;
+            background: #000;
+            position: relative;
+        }
+
+        .frosting-line {
+            width: 100%;
+            height: 8px;
+            border-bottom: 4px solid #fff;
+        }
+
+        @keyframes blink {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .pixel-btn {
+            border: 2px solid #fff;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center overflow-hidden">
+
+    <div class="game-canvas" id="click-area">
+        <div class="flex flex-col items-center pointer-events-none">
+            <div id="candle">
+                <div id="flame"></div>
+            </div>
+            <div class="cake-body">
+                <div class="frosting-line"></div>
+            </div>
+        </div>
+
+        <p id="instruction" class="absolute bottom-4 text-[10px] tracking-widest uppercase">tap it</p>
+    </div>
+
+    <div class="flex gap-10 mt-10">
+        <button onclick="navigate('prev')" class="text-xs uppercase hover:underline">Exit</button>
+        <button onclick="navigate('next')" id="next-btn" class="text-xs uppercase opacity-20" disabled>Next</button>
+    </div>
+
+    <script src="engine.js"></script>
+    <script>
+        const clickArea = document.getElementById('click-area');
+        const flame = document.getElementById('flame');
+        const instruction = document.getElementById('instruction');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Robust Tap/Click Listener
+        clickArea.addEventListener('click', function() {
+            // Ignition Logic
+            flame.style.display = 'block';
+            instruction.innerText = "wish made";
+            
+            // Enable Next Page
+            nextBtn.style.opacity = "1";
+            nextBtn.disabled = false;
+            
+            // Subtle Vibration for Java feel
+            if (navigator.vibrate) navigator.vibrate(50);
+        });
+    </script>
+</body>
+</html>
+
+<!-- made by pheonix14 -->

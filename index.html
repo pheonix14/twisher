@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Surprise Waiting...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center text-white text-center transition-all duration-1000">
+
+    <div class="p-10 bg-black/20 backdrop-blur-2xl rounded-[50px] border border-white/10 shadow-2xl">
+        <h1 class="text-6xl font-black mb-6 italic tracking-tighter">Hey there!</h1>
+        <div class="flex gap-4 justify-center text-4xl font-mono mb-10">
+            <div class="bg-white/10 p-4 rounded-xl"><span id="d">00</span><p class="text-[10px] opacity-50">Days</p></div>
+            <div class="bg-white/10 p-4 rounded-xl"><span id="h">00</span><p class="text-[10px] opacity-50">Hours</p></div>
+            <div class="bg-white/10 p-4 rounded-xl"><span id="m">00</span><p class="text-[10px] opacity-50">Mins</p></div>
+        </div>
+        <button onclick="navigate('next')" class="bg-white text-black px-12 py-4 rounded-full font-black hover:scale-110 transition shadow-xl">START JOURNEY →</button>
+    </div>
+
+    <button onclick="window.location.href='admin.html'" class="fixed bottom-6 right-6 p-4 bg-black/20 hover:bg-black/60 rounded-full transition-all">⚙️</button>
+
+    <script src="engine.js"></script> <script>
+        function updateTimer() {
+            const diff = new Date(config.date || '2026-12-31').getTime() - new Date().getTime();
+            if (diff > 0) {
+                document.getElementById('d').innerText = Math.floor(diff / 86400000);
+                document.getElementById('h').innerText = Math.floor((diff % 86400000) / 3600000);
+                document.getElementById('m').innerText = Math.floor((diff % 3600000) / 60000);
+            }
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+    </script>
+</body>
+</html>
+
+<!-- made by pheonix14 -->

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animation Presets */
+        .anim-float { animation: float 3s ease-in-out infinite; }
+        .anim-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .anim-tilt { animation: tilt 5s linear infinite; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes tilt { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .8; transform: scale(1.05); } }
+        
+        .memory-card { transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    </style>
+</head>
+<body id="gallery-bg" class="min-h-screen p-8 transition-colors duration-1000">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center mb-16">
+            <h1 id="gallery-title" class="text-5xl font-black text-white drop-shadow-md">Our Moments</h1>
+            <p class="text-white/70 mt-2">Click anywhere to open Admin Tools (Password required)</p>
+        </header>
+
+        <div id="memory-container" class="flex flex-wrap gap-10 justify-center">
+            </div>
+    </div>
+
+    <div id="admin-drawer" class="fixed bottom-0 left-0 right-0 bg-white p-6 rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-500 z-50 max-h-[70vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="font-bold text-xl">📸 Gallery Editor</h2>
+            <button onclick="toggleDrawer()" class="text-red-500 font-bold">Close ✖</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-3">
+                <label class="block text-sm font-bold">Add New Photo:</label>
+                <input type="file" id="img-input" class="w-full border p-2 rounded">
+                <input type="text" id="img-caption" placeholder="Caption (e.g. Best Day Ever!)" class="w-full border p-2 rounded">
+                <button onclick="addMemory()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold">Add to Gallery</button>
+            </div>
+
+            <div class="space-y-3">
+                <label class="block text-sm font-bold">Gallery Heading:</label>
+                <input type="text" id="edit-gallery-title" oninput="updateHeading()" class="w-full border p-2 rounded">
+                
+                <label class="block text-sm font-bold">Global Animation Style:</label>
+                <select id="edit-anim" onchange="updateStyle()" class="w-full border p-2 rounded">
+                    <option value="anim-float">Floating (Gentle)</option>
+                    <option value="anim-tilt">Polaroid Tilt (Playful)</option>
+                    <option value="anim-pulse">Heartbeat (Soft)</option>
+                    <option value="none">Static (Clean)</option>
+                </select>
+
+                <button onclick="clearGallery()" class="text-xs text-red-400 underline">Clear All Memories</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check Auth and Toggle Drawer
+        window.onclick = (e) => {
+            if (e.target.tagName === 'BODY' || e.target.tagName === 'HEADER') {
+                if(prompt("Enter Admin Password:") === "pheonix14") {
+                    toggleDrawer();
+                }
+            }
+        };
+
+        function toggleDrawer() {
+            const drawer = document.getElementById('admin-drawer');
+            drawer.classList.toggle('translate-y-full');
+        }
+
+        // Add Memory to LocalStorage
+        function addMemory() {
+            const file = document.getElementById('img-input').files[0];
+            const caption = document.getElementById('img-caption').value;
+            if(!file) return alert("Select an image first!");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const memories = JSON.parse(localStorage.getItem('memories') || '[]');
+                memories.push({ src: e.target.result, caption: caption });
+                localStorage.setItem('memories', JSON.stringify(memories));
+                renderGallery();
+                document.getElementById('img-caption').value = "";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateHeading() {
+            const val = document.getElementById('edit-gallery-title').value;
+            localStorage.setItem('galleryTitle', val);
+            document.getElementById('gallery-title').innerText = val;
+        }
+
+        function updateStyle() {
+            localStorage.setItem('galleryAnim', document.getElementById('edit-anim').value);
+            renderGallery();
+        }
+
+        function clearGallery() {
+            if(confirm("Delete everything?")) {
+                localStorage.removeItem('memories');
+                renderGallery();
+            }
+        }
+
+        // Render the UI
+        function renderGallery() {
+            const container = document.getElementById('memory-container');
+            const memories = JSON.parse(localStorage.getItem('memories') || '[]');
+            const animClass = localStorage.getItem('galleryAnim') || 'anim-float';
+            const theme = localStorage.getItem('theme') || 'midnight';
+            const themes = { midnight: '#0f172a', sunset: '#f97316', lavender: '#a855f7' };
+
+            // Apply Theme
+            document.body.style.backgroundColor = localStorage.getItem('theme') === 'custom' 
+                ? localStorage.getItem('customColor') : themes[theme];
+
+            document.getElementById('gallery-title').innerText = localStorage.getItem('galleryTitle') || "Our Moments";
+
+            container.innerHTML = memories.map((m, index) => `
+                <div class="memory-card bg-white p-4 shadow-2xl rounded-sm ${animClass}" style="animation-delay: ${index * 0.2}s">
+                    <div class="w-64 h-64 overflow-hidden mb-3">
+                        <img src="${m.src}" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-black font-serif italic text-center text-lg">${m.caption}</p>
+                </div>
+            `).join('');
+        }
+
+        renderGallery();
+    </script>
+</body>
+</html>
+
+<!-- made by pheonix14 -->

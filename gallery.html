@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen p-10 transition-all duration-1000">
+    <h1 class="text-center text-5xl font-black text-white italic mb-12">OUR MEMORIES</h1>
+    <div id="admin-zone" class="hidden max-w-xl mx-auto mb-16 p-6 bg-white rounded-3xl shadow-xl">
+        <input type="file" id="img" class="mb-4 block w-full text-sm">
+        <input type="text" id="cap" placeholder="Caption..." class="w-full border p-3 rounded-xl mb-4">
+        <button onclick="addImg()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Add Photo</button>
+    </div>
+    <div id="grid" class="flex flex-wrap justify-center gap-10"></div>
+    <div class="mt-20 flex justify-center gap-6">
+        <button onclick="navigate('prev')" class="px-10 py-3 rounded-full bg-white/10 text-white">← Back</button>
+        <button onclick="navigate('next')" class="px-10 py-3 rounded-full bg-white text-black font-black">Home →</button>
+    </div>
+    <script src="engine.js"></script>
+    <script>
+        const isAdmin = localStorage.getItem('adminActive') === 'true';
+        if(isAdmin) document.getElementById('admin-zone').classList.remove('hidden');
+        function render() {
+            const mems = JSON.parse(localStorage.getItem('memories') || '[]');
+            document.getElementById('grid').innerHTML = mems.map((m, i) => `
+                <div class="bg-white p-4 shadow-2xl rotate-${i % 2 === 0 ? '1' : '-1'} w-64 hover:scale-110 transition">
+                    <img src="${m.src}" class="w-full h-48 object-cover mb-2">
+                    <p class="text-center italic text-gray-700 font-serif">${m.caption}</p>
+                    ${isAdmin ? `<button onclick="del(${i})" class="text-[10px] text-red-500 block mx-auto mt-2">Delete</button>` : ''}
+                </div>
+            `).join('');
+        }
+        function addImg() {
+            const f = document.getElementById('img').files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const mems = JSON.parse(localStorage.getItem('memories') || '[]');
+                mems.push({ src: e.target.result, caption: document.getElementById('cap').value });
+                localStorage.setItem('memories', JSON.stringify(mems)); render();
+            };
+            reader.readAsDataURL(f);
+        }
+        function del(i) {
+            let mems = JSON.parse(localStorage.getItem('memories')); mems.splice(i,1);
+            localStorage.setItem('memories', JSON.stringify(mems)); render();
+        }
+        render();
+    </script>
+</body>
+</html>
+
+<!-- made by pheonix14 -->

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Happy Birthday!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        .heart { position: absolute; bottom: -50px; animation: floatUp 5s linear infinite; }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center text-white text-center overflow-hidden transition-all duration-1000">
+    <div id="hearts" class="absolute inset-0 pointer-events-none"></div>
+    <div class="z-10 p-12 bg-white/10 backdrop-blur-2xl rounded-[60px] border border-white/20 shadow-2xl">
+        <h1 class="text-7xl font-black mb-4">🎉 HAPPY BIRTHDAY!</h1>
+        <p class="text-2xl italic opacity-80 mb-10">You're one in a million.</p>
+        <div class="flex gap-4 justify-center">
+            <button onclick="navigate('prev')" class="px-8 py-3 rounded-full border border-white/20">Back</button>
+            <button onclick="navigate('next')" class="px-10 py-3 rounded-full bg-white text-black font-black hover:scale-110 transition">Continue →</button>
+        </div>
+    </div>
+    <script src="engine.js"></script>
+    <script>
+        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+        setInterval(() => {
+            const h = document.createElement('div'); h.className='heart text-3xl'; h.innerText='❤️';
+            h.style.left=Math.random()*100+'vw'; h.style.animationDuration=(Math.random()*2+3)+'s';
+            document.getElementById('hearts').appendChild(h); setTimeout(()=>h.remove(),5000);
+        }, 400);
+    </script>
+</body>
+</html>
+
+<!-- made by pheonix14 -->

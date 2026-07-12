@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pheonix Master Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <style>
+        /* Circular Color Picker Styling */
+        #color-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            overflow: hidden;
+        }
+        #color-circle::-webkit-color-swatch-wrapper { padding: 0; }
+        #color-circle::-webkit-color-swatch { border: none; border-radius: 50%; }
+        
+        .file-label {
+            display: block;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .file-label:hover { border-color: #6366f1; background: #eef2ff; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100">
+        <div class="bg-slate-900 p-8 text-white flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-black italic tracking-tighter uppercase">Studio Admin</h1>
+                <p class="opacity-50 text-xs uppercase tracking-widest">Upload Assets & Configure Flow</p>
+            </div>
+            <button onclick="location.href='index.html'" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition">✕</button>
+        </div>
+
+        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            
+            <div class="space-y-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">1. Visuals</h3>
+                
+                <div class="flex flex-col items-center">
+                    <label class="text-xs mb-2 text-slate-500">Theme Color</label>
+                    <input type="color" id="color-circle" oninput="updatePreviewColor(this.value)">
+                    <span id="hex-code" class="mt-2 font-mono text-sm">#000000</span>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-500 block mb-2">Custom Background Image</label>
+                    <label class="file-label">
+                        <span id="bg-status" class="text-xs text-slate-400 italic">Click to Upload BG</span>
+                        <input type="file" id="bg-upload" class="hidden" accept="image/*" onchange="handleFileUpload(this, 'bgImg')">
+                    </label>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">2. Media Files</h3>
+                
+                <div>
+                    <label class="text-xs text-slate-500 block mb-2">Background Music (MP3)</label>
+                    <label class="file-label">
+                        <span id="music-status" class="text-xs text-slate-400">Attach MP3 File</span>
+                        <input type="file" id="music-upload" class="hidden" accept="audio/*" onchange="handleFileUpload(this, 'bgMusic')">
+                    </label>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-500 block mb-2">Floating Popup Video (MP4)</label>
+                    <label class="file-label">
+                        <span id="popup-status" class="text-xs text-slate-400">Attach MP4 File</span>
+                        <input type="file" id="popup-upload" class="hidden" accept="video/*" onchange="handleFileUpload(this, 'popupVid')">
+                    </label>
+                </div>
+
+                <div>
+                    <label class="text-xs text-red-500 font-bold block mb-2 uppercase">Jumpscare Media (MP4)</label>
+                    <label class="file-label border-red-200 bg-red-50">
+                        <span id="jump-status" class="text-xs text-red-400">Attach Scare File</span>
+                        <input type="file" id="jump-upload" class="hidden" accept="video/*,audio/*" onchange="handleFileUpload(this, 'jumpMedia')">
+                    </label>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">3. Page Order</h3>
+                <ul id="page-list" class="space-y-2">
+                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm" data-id="index.html">🏠 Home <span>⠿</span></li>
+                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm" data-id="game.html">🎮 Pixel Game <span>⠿</span></li>
+                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm" data-id="wish.html">🎂 Wish <span>⠿</span></li>
+                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm" data-id="jumpscare.html">💀 Jumpscare <span>⠿</span></li>
+                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm" data-id="gallery.html">📸 Gallery <span>⠿</span></li>
+                </ul>
+                
+                <div class="pt-4">
+                    <label class="text-xs text-slate-500 block mb-2">Countdown Date</label>
+                    <input type="datetime-local" id="conf-date" class="w-full border p-3 rounded-xl bg-slate-50 text-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8 bg-slate-900 border-t flex justify-between items-center">
+            <button onclick="localStorage.clear(); alert('Wiped!'); location.reload();" class="text-white/30 hover:text-white text-xs underline">Wipe All Storage</button>
+            <button onclick="saveEverything()" class="bg-indigo-500 text-white px-14 py-4 rounded-2xl font-black shadow-xl hover:bg-indigo-400 transition-all">SAVE & PUBLISH</button>
+        </div>
+    </div>
+
+    <script>
+        // Password Check
+        if(localStorage.getItem('adminActive') !== 'true') {
+            if(prompt("Enter Admin Pass:") === "pheonix14") localStorage.setItem('adminActive', 'true');
+            else window.location.href = "index.html";
+        }
+
+        // Sortable Setup
+        const el = document.getElementById('page-list');
+        Sortable.create(el, { animation: 150 });
+
+        function updatePreviewColor(val) {
+            document.getElementById('hex-code').innerText = val.toUpperCase();
+        }
+
+        // The "Magic" File Handler (Converts file to Base64 String)
+        function handleFileUpload(input, storageKey) {
+            const file = input.files[0];
+            if (file.size > 5000000) { // 5MB Limit for localStorage
+                alert("File too large! Keep files under 5MB for storage.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem(storageKey, e.target.result);
+                document.getElementById(input.id.replace('upload', 'status')).innerText = "✅ Uploaded: " + file.name;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveEverything() {
+            const order = Array.from(el.children).map(item => item.getAttribute('data-id'));
+            localStorage.setItem('pageOrder', JSON.stringify(order));
+            localStorage.setItem('themeColor', document.getElementById('color-circle').value);
+            localStorage.setItem('targetDate', document.getElementById('conf-date').value);
+            alert("Site configuration saved successfully!");
+        }
+    </script>
+</body>
+</html>
+
+<!-- made by pheonix14 -->
