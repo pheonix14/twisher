@@ -17,8 +17,8 @@
             font-family: 'JetBrains Mono', monospace;
         }
         #color-circle {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             border: 3px solid rgba(255,255,255,0.2);
             cursor: pointer;
@@ -37,23 +37,43 @@
             background: #151b2b;
             border: 1px solid #28334e;
             color: #fff;
-            padding: 12px 16px;
-            border-radius: 14px;
-            font-size: 0.875rem;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
             outline: none;
             transition: all 0.2s;
         }
         .custom-input:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
             background: #192033;
         }
 
         .section-card {
             background: #111726;
             border: 1px solid #1e293b;
-            border-radius: 24px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .btn-upload {
+            background: #1e293b;
+            border: 1px dashed #475569;
+            color: #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .btn-upload:hover {
+            border-color: #ec4899;
+            background: #28334e;
+            color: #fff;
         }
 
         .preset-chip {
@@ -69,7 +89,7 @@
         .preset-chip:hover {
             background: #313f63;
             color: #fff;
-            border-color: #4f46e5;
+            border-color: #ec4899;
         }
 
         .toast-notify {
@@ -95,74 +115,79 @@
 </head>
 <body class="min-h-screen p-4 md:p-8">
 
-    <div id="toast" class="toast-notify"> Link Copied to Clipboard!</div>
+    <div id="toast" class="toast-notify">Link Copied to Clipboard!</div>
 
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="max-w-6xl mx-auto space-y-6">
         
         <!-- Header -->
-        <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 rounded-[32px] border border-white/10 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
-            <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            
+        <header class="bg-gradient-to-r from-slate-900 via-pink-950/40 to-slate-900 p-6 rounded-3xl border border-white/10 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2">
-                    <span></span> Zero-Database URL Architecture
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/30 text-pink-300 text-xs font-bold uppercase tracking-wider mb-2">
+                    Zero-Database URL Engine • Supports YouTube & Uploads
                 </div>
-                <h1 class="text-3xl md:text-4xl font-black italic tracking-tight uppercase text-white flex items-center gap-3">
+                <h1 class="text-3xl font-black italic tracking-tight uppercase text-white">
                     Twisher Studio
                 </h1>
-                <p class="text-white/50 text-xs md:text-sm mt-1">
-                    Create independent surprise links for <span class="text-indigo-300 font-bold">100s of different users</span> — all encoded directly in the URL!
+                <p class="text-white/50 text-xs mt-1">
+                    Paste YouTube Shorts, upload media files, and customize for 100s of independent recipients.
                 </p>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="index.html" id="back-home-btn" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition flex items-center gap-2">
-                    <span>Preview Preview</span>
+                <a href="index.html" id="back-home-btn" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition">
+                    Preview Link
                 </a>
             </div>
         </header>
 
-        <!-- SHAREABLE LINK HERO SECTION (Core Solution for 100s of Users) -->
-        <section class="section-card bg-gradient-to-b from-indigo-950/60 to-slate-900/90 border-indigo-500/40 shadow-[0_0_40px_rgba(99,102,241,0.15)]">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <!-- IMPORT / LOAD EXISTING LINK BAR -->
+        <section class="section-card bg-slate-900/80 border-slate-700">
+            <label class="text-[11px] text-white/70 block mb-1.5 font-bold uppercase tracking-wider">Import Existing Twisher Link to Edit</label>
+            <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="import-url-input" placeholder="Paste any Twisher URL or #c=... link here to load it" class="custom-input code-font text-xs">
+                <button onclick="loadFromUrlInput()" class="bg-pink-600 hover:bg-pink-500 active:scale-95 text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow shrink-0">
+                    Load into Studio
+                </button>
+            </div>
+        </section>
+
+        <!-- SHAREABLE LINK HERO SECTION -->
+        <section class="section-card bg-gradient-to-b from-pink-950/40 to-slate-900/90 border-pink-500/40 shadow-[0_0_35px_rgba(236,72,153,0.15)]">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-3">
                 <div>
-                    <h2 class="text-lg font-black uppercase tracking-tight text-white flex items-center gap-2">
-                        <span></span> Unique Sharable Link For Recipient
+                    <h2 class="text-base font-black uppercase tracking-tight text-white">
+                        Unique Shareable Link For Recipient
                     </h2>
                     <p class="text-xs text-white/60">
-                        Everything (Name, Age, Wish, Countdown, Colors, Photos) is stored safely in this link. Send it to anyone on any browser!
+                        Everything (Name, Age, Wish, Countdown, Colors, YouTube Music/Video, Photos) is preserved in this link.
                     </p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span id="link-size-badge" class="code-font text-[10px] bg-indigo-900/60 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30">
-                        URL Ready
-                    </span>
-                </div>
+                <span id="link-size-badge" class="code-font text-[10px] bg-pink-900/60 text-pink-300 px-2.5 py-1 rounded-full border border-pink-500/30">
+                    URL Ready
+                </span>
             </div>
 
-            <!-- Link Box -->
-            <div class="flex flex-col sm:flex-row gap-2 mb-4">
-                <input type="text" id="shareable-url-input" readonly onclick="this.select()" class="custom-input code-font text-xs bg-slate-950 border-indigo-500/40 text-indigo-200 select-all py-3.5">
-                <button onclick="copyShareableUrl()" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-lg shrink-0 flex items-center justify-center gap-2">
-                    <span></span> Copy Link
+            <div class="flex flex-col sm:flex-row gap-2 mb-3">
+                <input type="text" id="shareable-url-input" readonly onclick="this.select()" class="custom-input code-font text-xs bg-slate-950 border-pink-500/40 text-pink-200 select-all py-3">
+                <button onclick="copyShareableUrl()" class="bg-pink-600 hover:bg-pink-500 active:scale-95 text-white px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-lg shrink-0">
+                    Copy Link
                 </button>
             </div>
 
-            <!-- Quick Action Row -->
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-                <button onclick="shareOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
-                    <span></span> Share via WhatsApp
+            <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                <button onclick="shareOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow">
+                    Share via WhatsApp
                 </button>
-                <button onclick="openShareableUrl()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                    <span></span> Test in New Tab
+                <button onclick="openShareableUrl()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                    Test in New Tab
                 </button>
-                <button onclick="saveCurrentProfile()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                    <span></span> Save to My Profiles
+                <button onclick="saveCurrentProfile()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                    Save to Profiles
                 </button>
                 <div class="ml-auto flex items-center gap-2">
                     <label class="text-xs text-white/40">Switch Profile:</label>
                     <select id="profile-selector" onchange="loadSelectedProfile(this.value)" class="bg-slate-950 text-xs text-white border border-white/20 rounded-xl px-3 py-1.5 outline-none">
-                        <option value="">Default Profile</option>
+                        <option value="">-- Profiles --</option>
                     </select>
                 </div>
             </div>
@@ -173,29 +198,28 @@
 
             <!-- 1. PERSON & MESSAGE -->
             <div class="section-card space-y-4">
-                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-indigo-400"></span>
+                <div class="border-b border-white/10 pb-2.5">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">1. Recipient & Message</h3>
                 </div>
 
                 <div>
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Recipient Name</label>
-                    <input type="text" id="cfg-name" placeholder="e.g. Sarah, Bro, Alex" oninput="updateAll()" class="custom-input">
+                    <input type="text" id="cfg-name" placeholder="e.g. Aishi, Sarah, Alex" oninput="updateAll()" class="custom-input">
                 </div>
 
                 <div>
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Age or Milestone</label>
-                    <input type="text" id="cfg-age" placeholder="e.g. 21, 18, Sweet 16" oninput="updateAll()" class="custom-input">
+                    <input type="text" id="cfg-age" placeholder="e.g. 20, 21, Sweet 16" oninput="updateAll()" class="custom-input">
                 </div>
 
                 <div>
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Sender Name (From)</label>
-                    <input type="text" id="cfg-from" placeholder="e.g. Alex, pheonix14" oninput="updateAll()" class="custom-input">
+                    <input type="text" id="cfg-from" placeholder="e.g. pheonix14" oninput="updateAll()" class="custom-input">
                 </div>
 
                 <div>
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Wish Headline</label>
-                    <input type="text" id="cfg-wish" placeholder=" HAPPY BIRTHDAY!" oninput="updateAll()" class="custom-input">
+                    <input type="text" id="cfg-wish" placeholder="HAPPY BIRTHDAY!" oninput="updateAll()" class="custom-input">
                 </div>
 
                 <div>
@@ -206,8 +230,7 @@
 
             <!-- 2. COUNTDOWN & VISUAL THEME -->
             <div class="section-card space-y-4">
-                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-pink-400"></span>
+                <div class="border-b border-white/10 pb-2.5">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">2. Countdown & Theme</h3>
                 </div>
 
@@ -216,138 +239,132 @@
                     <input type="datetime-local" id="cfg-date" onchange="updateAll()" class="custom-input">
                 </div>
 
-                <div class="flex flex-col items-center p-4 bg-slate-950/60 rounded-2xl border border-white/5">
-                    <label class="text-[11px] text-white/50 block mb-2 font-bold uppercase">Primary Theme Color</label>
-                    <input type="color" id="color-circle" value="#6366f1" oninput="updateColorPreview(this.value)">
-                    <span id="hex-code" class="mt-2 code-font text-xs text-white/70">#6366F1</span>
+                <div class="flex flex-col items-center p-3 bg-slate-950/60 rounded-xl border border-white/5">
+                    <label class="text-[11px] text-white/50 block mb-2 font-bold uppercase">Theme Color</label>
+                    <input type="color" id="color-circle" value="#ec4899" oninput="updateColorPreview(this.value)">
+                    <span id="hex-code" class="mt-1 code-font text-xs text-white/70">#EC4899</span>
                     
-                    <!-- Color Swatches -->
                     <div class="flex gap-2 mt-3 flex-wrap justify-center">
+                        <button onclick="setColor('#ec4899')" class="w-6 h-6 rounded-full bg-[#ec4899] border border-white/20 hover:scale-110 transition" title="Rose Pink"></button>
                         <button onclick="setColor('#6366f1')" class="w-6 h-6 rounded-full bg-[#6366f1] border border-white/20 hover:scale-110 transition" title="Indigo"></button>
-                        <button onclick="setColor('#ec4899')" class="w-6 h-6 rounded-full bg-[#ec4899] border border-white/20 hover:scale-110 transition" title="Rose"></button>
                         <button onclick="setColor('#06b6d4')" class="w-6 h-6 rounded-full bg-[#06b6d4] border border-white/20 hover:scale-110 transition" title="Cyan"></button>
                         <button onclick="setColor('#eab308')" class="w-6 h-6 rounded-full bg-[#eab308] border border-white/20 hover:scale-110 transition" title="Amber"></button>
                         <button onclick="setColor('#10b981')" class="w-6 h-6 rounded-full bg-[#10b981] border border-white/20 hover:scale-110 transition" title="Emerald"></button>
-                        <button onclick="setColor('#8b5cf6')" class="w-6 h-6 rounded-full bg-[#8b5cf6] border border-white/20 hover:scale-110 transition" title="Violet"></button>
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Custom Background Image URL</label>
-                    <input type="text" id="cfg-bg" placeholder="Paste image URL (Unsplash, Imgur...)" oninput="updateAll()" class="custom-input text-xs">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[11px] text-white/60 font-bold uppercase">Background Image</label>
+                        <label for="bg-file-upload" class="btn-upload text-[10px] py-1 px-2.5">Upload File</label>
+                        <input type="file" id="bg-file-upload" accept="image/*" class="hidden" onchange="handleBgUpload(this)">
+                    </div>
+                    <input type="text" id="cfg-bg" placeholder="Paste image URL or use Upload button" oninput="updateAll()" class="custom-input text-xs">
                     <div class="flex gap-1.5 mt-2 flex-wrap">
-                        <span onclick="setBg('https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1600')" class="preset-chip"> Confetti</span>
-                        <span onclick="setBg('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600')" class="preset-chip"> Balloons</span>
-                        <span onclick="setBg('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=1600')" class="preset-chip"> Stars</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1600')" class="preset-chip">Confetti</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600')" class="preset-chip">Balloons</span>
                         <span onclick="setBg('')" class="preset-chip text-red-400">Clear</span>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. MEDIA (MUSIC, POPUP, JUMPSCARE) -->
+            <!-- 3. MEDIA (YOUTUBE SHORTS, AUDIO & EFFECTS) -->
             <div class="section-card space-y-4">
-                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-amber-400"></span>
-                    <h3 class="text-xs font-black text-white uppercase tracking-wider">3. Audio & Special Effects</h3>
+                <div class="border-b border-white/10 pb-2.5">
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">3. Audio & YouTube Video</h3>
                 </div>
 
                 <div>
-                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Background Music Audio URL</label>
-                    <input type="text" id="cfg-music" placeholder="Audio URL (.mp3 / .ogg)" oninput="updateAll()" class="custom-input text-xs">
-                    <div class="flex gap-1.5 mt-2 flex-wrap">
-                        <span onclick="setMusic('https://cdn.freesound.org/previews/456/456965_5121236-lq.mp3')" class="preset-chip"> Celebration</span>
-                        <span onclick="setMusic('https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3')" class="preset-chip"> Party Tune</span>
-                        <span onclick="setMusic('https://cdn.freesound.org/previews/566/566384_6142149-lq.mp3')" class="preset-chip"> Acoustic</span>
-                        <span onclick="setMusic('')" class="preset-chip text-red-400">Mute</span>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[11px] text-white/60 font-bold uppercase">Background Music / Audio</label>
+                        <label for="audio-file-upload" class="btn-upload text-[10px] py-1 px-2.5">Upload Audio</label>
+                        <input type="file" id="audio-file-upload" accept="audio/*" class="hidden" onchange="handleAudioUpload(this)">
                     </div>
+                    <input type="text" id="cfg-music" placeholder="Paste YouTube Short / Video or MP3 URL" oninput="updateAll()" class="custom-input text-xs">
+                    <p class="text-[10px] text-white/40 mt-1">Supports direct YouTube Shorts links (e.g. youtube.com/shorts/...)</p>
                 </div>
 
                 <div>
-                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Floating Mascot / Video Popup URL</label>
-                    <input type="text" id="cfg-popup" placeholder="GIF or MP4 URL" oninput="updateAll()" class="custom-input text-xs">
-                    <div class="flex gap-1.5 mt-2 flex-wrap">
-                        <span onclick="setPopup('https://media.giphy.com/media/blSTtZehjAZ8I/giphy.gif')" class="preset-chip"> Party Dog</span>
-                        <span onclick="setPopup('https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif')" class="preset-chip"> Confetti Cat</span>
-                        <span onclick="setPopup('')" class="preset-chip text-red-400">None</span>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[11px] text-white/60 font-bold uppercase">Popup Mascot / Video</label>
+                        <label for="popup-file-upload" class="btn-upload text-[10px] py-1 px-2.5">Upload GIF/Video</label>
+                        <input type="file" id="popup-file-upload" accept="image/*,video/*" class="hidden" onchange="handlePopupUpload(this)">
                     </div>
+                    <input type="text" id="cfg-popup" placeholder="Paste YouTube Short, Video or GIF URL" oninput="updateAll()" class="custom-input text-xs">
+                    <p class="text-[10px] text-white/40 mt-1">YouTube Shorts links will play as floating video loop</p>
                 </div>
 
-                <div class="p-3 bg-red-950/20 border border-red-900/40 rounded-2xl space-y-2">
+                <div class="p-3 bg-red-950/20 border border-red-900/40 rounded-xl space-y-2">
                     <div class="flex items-center justify-between">
-                        <label class="text-[11px] text-red-300 font-bold uppercase"> Jumpscare Feature</label>
-                        <input type="checkbox" id="cfg-scare-enabled" checked onchange="updateAll()" class="w-4 h-4 accent-red-500 cursor-pointer">
+                        <label class="text-[11px] text-red-300 font-bold uppercase">Jumpscare Media</label>
+                        <div class="flex items-center gap-2">
+                            <label for="scare-file-upload" class="btn-upload text-[10px] py-1 px-2">Upload Scare File</label>
+                            <input type="file" id="scare-file-upload" accept="image/*,video/*" class="hidden" onchange="handleScareUpload(this)">
+                            <input type="checkbox" id="cfg-scare-enabled" checked onchange="updateAll()" class="w-4 h-4 accent-red-500 cursor-pointer">
+                        </div>
                     </div>
-                    <input type="text" id="cfg-scare" placeholder="Jumpscare image/video URL" oninput="updateAll()" class="custom-input text-xs">
-                    <div class="flex gap-1.5 flex-wrap">
-                        <span onclick="setScare('https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=800')" class="preset-chip"> Spooky Pumpkin</span>
-                        <span onclick="setScare('https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?w=800')" class="preset-chip"> Ghost Face</span>
-                    </div>
+                    <input type="text" id="cfg-scare" placeholder="Paste Image (Etsy, Imgur) or Video URL" oninput="updateAll()" class="custom-input text-xs">
                 </div>
             </div>
 
             <!-- 4. MEMORIES GALLERY MANAGER -->
             <div class="section-card md:col-span-2 space-y-4">
-                <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="text-emerald-400"></span>
-                        <h3 class="text-xs font-black text-white uppercase tracking-wider">4. Memories Gallery (Polaroids)</h3>
-                    </div>
-                    <button onclick="addMemoryPrompt()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition">
-                        + Add Memory
-                    </button>
+                <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">4. Memories Gallery (Polaroids)</h3>
+                    <label for="mem-file-upload" class="btn-upload text-[11px] bg-pink-900/40 border-pink-500/50 text-white">
+                        + Upload Photo from Device
+                    </label>
+                    <input type="file" id="mem-file-upload" accept="image/*" class="hidden" onchange="handleMemoryUpload(this)">
                 </div>
 
                 <!-- Add Memory Inline Form -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-950/40 p-3 rounded-2xl border border-white/5">
-                    <input type="text" id="new-mem-url" placeholder="Photo URL (Imgur, Unsplash...)" class="custom-input text-xs sm:col-span-2">
-                    <input type="text" id="new-mem-cap" placeholder="Sweet Caption" class="custom-input text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-950/40 p-3 rounded-xl border border-white/5">
+                    <input type="text" id="new-mem-url" placeholder="Paste Photo URL (Unsplash, Etsy, Imgur...)" class="custom-input text-xs sm:col-span-2">
+                    <input type="text" id="new-mem-cap" placeholder="Caption" class="custom-input text-xs">
                     <div class="sm:col-span-3 flex justify-end">
-                        <button onclick="submitNewMemory()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <button onclick="submitNewMemory()" class="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
                             Attach Photo to Link
                         </button>
                     </div>
                 </div>
 
                 <!-- Memory List -->
-                <div id="memories-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1">
-                    <!-- Rendered dynamically -->
-                </div>
+                <div id="memories-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1"></div>
             </div>
 
             <!-- 5. JOURNEY FLOW (DRAGGABLE) -->
             <div class="section-card space-y-4">
-                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-purple-400"></span>
+                <div class="border-b border-white/10 pb-2.5">
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">5. Drag Page Order</h3>
                 </div>
 
                 <p class="text-[11px] text-white/50">Drag pages to customize the sequence of the surprise:</p>
 
                 <ul id="page-list" class="space-y-2">
-                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="index.html">
-                        <span> 1. Home Countdown</span> <span>⠿</span>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-pink-500 transition" data-id="index.html">
+                        <span>1. Home Countdown</span> <span>⠿</span>
                     </li>
-                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="game.html">
-                        <span> 2. Pixel Wish Cake</span> <span>⠿</span>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-pink-500 transition" data-id="game.html">
+                        <span>2. Pixel Wish Cake</span> <span>⠿</span>
                     </li>
-                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="wish.html">
-                        <span> 3. Big Confetti Wish</span> <span>⠿</span>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-pink-500 transition" data-id="wish.html">
+                        <span>3. Big Confetti Wish</span> <span>⠿</span>
                     </li>
-                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="jumpscare.html">
-                        <span> 4. Surprise Jumpscare</span> <span>⠿</span>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-pink-500 transition" data-id="jumpscare.html">
+                        <span>4. Surprise Jumpscare</span> <span>⠿</span>
                     </li>
-                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="gallery.html">
-                        <span> 5. Photo Polaroids</span> <span>⠿</span>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-pink-500 transition" data-id="gallery.html">
+                        <span>5. Photo Polaroids</span> <span>⠿</span>
                     </li>
                 </ul>
             </div>
         </div>
 
         <!-- FOOTER & PHEONIX14 CREDIT -->
-        <footer class="p-8 bg-slate-900/60 rounded-[28px] border border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
+        <footer class="p-6 bg-slate-900/60 rounded-3xl border border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
             <div>
-                <p class="font-bold text-white flex items-center gap-2">
-                    Twisher Studio Engine • Created by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a>
+                <p class="font-bold text-white">
+                    Twisher Studio Engine • Created by <a href="https://github.com/pheonix14" target="_blank" class="text-pink-400 font-bold hover:underline">pheonix14</a>
                 </p>
                 <p class="text-[11px] text-white/40 mt-1">
                     100% Serverless & Zero-Database Architecture • Hosted on GitHub Pages
@@ -358,7 +375,7 @@
                     Reset to Defaults
                 </button>
                 <button onclick="copyShareableUrl()" class="bg-white text-slate-900 font-black px-6 py-2.5 rounded-full hover:scale-105 active:scale-95 transition shadow-lg">
-                    Copy Share Link 
+                    Copy Share Link
                 </button>
             </div>
         </footer>
@@ -398,28 +415,101 @@
             currentConfig.bgImg = url;
             updateAll();
         }
-        function setMusic(url) {
-            document.getElementById('cfg-music').value = url;
-            currentConfig.bgMusic = url;
-            updateAll();
-        }
-        function setPopup(url) {
-            document.getElementById('cfg-popup').value = url;
-            currentConfig.popupVid = url;
-            updateAll();
-        }
-        function setScare(url) {
-            document.getElementById('cfg-scare').value = url;
-            currentConfig.jumpMedia = url;
-            updateAll();
+
+        // File Upload Handlers (Client-Side Canvas Compressed)
+        function handleBgUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            showToast("Compressing image...");
+            Twisher.compressImageFile(file, 1000, 1000, 0.65, (dataUrl) => {
+                if (dataUrl) {
+                    document.getElementById('cfg-bg').value = dataUrl;
+                    currentConfig.bgImg = dataUrl;
+                    updateAll();
+                    showToast("Background image uploaded!");
+                }
+            });
         }
 
-        // Memory Handling
+        function handleAudioUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('cfg-music').value = e.target.result;
+                currentConfig.bgMusic = e.target.result;
+                updateAll();
+                showToast("Audio file uploaded!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handlePopupUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.type.startsWith('image/')) {
+                Twisher.compressImageFile(file, 400, 400, 0.7, (dataUrl) => {
+                    document.getElementById('cfg-popup').value = dataUrl;
+                    currentConfig.popupVid = dataUrl;
+                    updateAll();
+                    showToast("Popup GIF/image uploaded!");
+                });
+            } else {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('cfg-popup').value = e.target.result;
+                    currentConfig.popupVid = e.target.result;
+                    updateAll();
+                    showToast("Popup video uploaded!");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleScareUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.type.startsWith('image/')) {
+                Twisher.compressImageFile(file, 800, 800, 0.65, (dataUrl) => {
+                    document.getElementById('cfg-scare').value = dataUrl;
+                    currentConfig.jumpMedia = dataUrl;
+                    updateAll();
+                    showToast("Scare image uploaded!");
+                });
+            } else {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('cfg-scare').value = e.target.result;
+                    currentConfig.jumpMedia = e.target.result;
+                    updateAll();
+                    showToast("Scare video uploaded!");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleMemoryUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            showToast("Processing photo...");
+            Twisher.compressImageFile(file, 600, 600, 0.65, (dataUrl) => {
+                if (dataUrl) {
+                    const caption = prompt("Enter a sweet caption for this photo:", "Special moment together");
+                    if (!Array.isArray(currentConfig.memories)) currentConfig.memories = [];
+                    currentConfig.memories.push({ src: dataUrl, caption: caption || "Special moment" });
+                    renderMemoriesList();
+                    updateAll();
+                    showToast("Photo attached to memories!");
+                }
+            });
+        }
+
+        // Memory Handling via URL input
         function submitNewMemory() {
             const urlInput = document.getElementById('new-mem-url');
             const capInput = document.getElementById('new-mem-cap');
             const url = urlInput.value.trim();
-            const cap = capInput.value.trim() || 'A cherished memory ';
+            const cap = capInput.value.trim() || 'A cherished memory';
 
             if (!url) {
                 alert("Please provide an image URL first!");
@@ -433,7 +523,7 @@
             
             renderMemoriesList();
             updateAll();
-            showToast(" Memory Added to Link!");
+            showToast("Memory Added to Link!");
         }
 
         function removeMemory(index) {
@@ -459,7 +549,7 @@
                         <p class="text-xs font-bold truncate text-white">${escapeHtml(m.caption)}</p>
                         <p class="text-[10px] text-white/40 truncate">${escapeHtml(m.src)}</p>
                     </div>
-                    <button onclick="removeMemory(${idx})" class="text-red-400 hover:text-red-300 p-1 text-xs" title="Remove"></button>
+                    <button onclick="removeMemory(${idx})" class="text-red-400 hover:text-red-300 p-1 text-xs" title="Remove">✕</button>
                 </div>
             `).join('');
         }
@@ -479,7 +569,7 @@
             currentConfig.jumpMedia = document.getElementById('cfg-scare').value.trim();
             currentConfig.showJumpscare = document.getElementById('cfg-scare-enabled').checked;
 
-            // Generate the link
+            // Generate link
             const url = Twisher.generateShareUrl(currentConfig, 'index.html');
             const urlInput = document.getElementById('shareable-url-input');
             urlInput.value = url;
@@ -494,16 +584,64 @@
             localStorage.setItem('twisher_active_config', JSON.stringify(currentConfig));
         }
 
+        // Import Link Bar: Loads any pasted Twisher link
+        function loadFromUrlInput() {
+            const raw = document.getElementById('import-url-input').value.trim();
+            if (!raw) return;
+
+            try {
+                let hashStr = '';
+                let queryStr = '';
+
+                if (raw.includes('#')) {
+                    const parts = raw.split('#');
+                    hashStr = parts[1];
+                    const qPart = parts[0].split('?')[1];
+                    if (qPart) queryStr = qPart;
+                } else if (raw.includes('?')) {
+                    queryStr = raw.split('?')[1];
+                } else if (raw.startsWith('ey') || raw.startsWith('c=')) {
+                    hashStr = raw;
+                }
+
+                let loadedConfig = Object.assign({}, Twisher.DEFAULT_CONFIG);
+
+                if (hashStr) {
+                    let cData = hashStr.startsWith('c=') ? hashStr.slice(2) : hashStr;
+                    const decoded = Twisher.base64ToUtf8(cData);
+                    if (decoded) {
+                        loadedConfig = Object.assign(loadedConfig, JSON.parse(decoded));
+                    }
+                }
+
+                if (queryStr) {
+                    const sp = new URLSearchParams(queryStr);
+                    if (sp.has('name')) loadedConfig.name = sp.get('name');
+                    if (sp.has('age')) loadedConfig.age = sp.get('age');
+                    if (sp.has('from')) loadedConfig.from = sp.get('from');
+                    if (sp.has('wish')) loadedConfig.wish = sp.get('wish');
+                    if (sp.has('theme')) loadedConfig.themeColor = '#' + sp.get('theme').replace(/^#/, '');
+                }
+
+                currentConfig = loadedConfig;
+                populateForm(currentConfig);
+                updateAll();
+                showToast("Link loaded into Studio successfully!");
+            } catch (err) {
+                alert("Could not parse link. Make sure it is a valid Twisher link.");
+            }
+        }
+
         // Copy Shareable URL
         function copyShareableUrl() {
             const input = document.getElementById('shareable-url-input');
             input.select();
             input.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(input.value).then(() => {
-                showToast(" Link Copied! Send it to your friend.");
+                showToast("Link Copied! Send it to your friend.");
             }).catch(() => {
                 document.execCommand('copy');
-                showToast(" Link Copied!");
+                showToast("Link Copied!");
             });
         }
 
@@ -525,7 +663,7 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // Profile Management (Enables saving 100s of different users locally)
+        // Profile Management
         function getProfiles() {
             try {
                 return JSON.parse(localStorage.getItem('twisher_saved_profiles') || '{}');
@@ -536,20 +674,20 @@
 
         function saveCurrentProfile() {
             const defaultName = currentConfig.name ? `${currentConfig.name}'s Surprise` : 'New Profile';
-            const name = prompt("Enter a profile title to save (e.g. Sarah Bday, Mom 50th):", defaultName);
+            const name = prompt("Enter a profile title to save (e.g. Aishi 20th, Sarah Bday):", defaultName);
             if (!name) return;
 
             const profiles = getProfiles();
             profiles[name] = currentConfig;
             localStorage.setItem('twisher_saved_profiles', JSON.stringify(profiles));
             updateProfileDropdown();
-            showToast(` Saved profile "${name}"!`);
+            showToast(`Saved profile "${name}"!`);
         }
 
         function updateProfileDropdown() {
             const sel = document.getElementById('profile-selector');
             const profiles = getProfiles();
-            sel.innerHTML = '<option value="">-- Saved Profiles --</option>';
+            sel.innerHTML = '<option value="">-- Profiles --</option>';
             for (const key of Object.keys(profiles)) {
                 const opt = document.createElement('option');
                 opt.value = key;
@@ -565,7 +703,7 @@
                 currentConfig = profiles[name];
                 populateForm(currentConfig);
                 updateAll();
-                showToast(` Loaded profile "${name}"!`);
+                showToast(`Loaded profile "${name}"!`);
             }
         }
 
@@ -574,7 +712,7 @@
             currentConfig = Object.assign({}, Twisher.DEFAULT_CONFIG);
             populateForm(currentConfig);
             updateAll();
-            showToast("↺ Reset to default template");
+            showToast("Reset to default template");
         }
 
         function populateForm(cfg) {
@@ -584,15 +722,14 @@
             document.getElementById('cfg-wish').value = cfg.wish || '';
             document.getElementById('cfg-sub').value = cfg.sub || '';
             document.getElementById('cfg-date').value = cfg.targetDate || '';
-            document.getElementById('color-circle').value = cfg.themeColor || '#6366f1';
-            document.getElementById('hex-code').innerText = (cfg.themeColor || '#6366f1').toUpperCase();
+            document.getElementById('color-circle').value = cfg.themeColor || '#ec4899';
+            document.getElementById('hex-code').innerText = (cfg.themeColor || '#ec4899').toUpperCase();
             document.getElementById('cfg-bg').value = cfg.bgImg || '';
             document.getElementById('cfg-music').value = cfg.bgMusic || '';
             document.getElementById('cfg-popup').value = cfg.popupVid || '';
             document.getElementById('cfg-scare').value = cfg.jumpMedia || '';
             document.getElementById('cfg-scare-enabled').checked = (cfg.showJumpscare !== false);
 
-            // Rebuild sortable order list if pageOrder exists
             if (Array.isArray(cfg.pageOrder)) {
                 const list = document.getElementById('page-list');
                 const itemsMap = {};

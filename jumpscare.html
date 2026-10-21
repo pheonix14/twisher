@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wait for it... 🤫</title>
+    <title>Wait for it...</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .full-screen { 
@@ -11,7 +11,8 @@
             inset: 0; 
             width: 100vw; 
             height: 100vh; 
-            object-fit: cover; 
+            object-fit: contain; 
+            background: #000;
             z-index: 999; 
         }
         @keyframes shake {
@@ -36,15 +37,14 @@
 
     <!-- Suspense screen before scare -->
     <div id="suspense" class="text-center p-8 transition-opacity duration-300">
-        <div class="text-6xl mb-4 animate-pulse">🤫</div>
+        <div class="text-4xl mb-4 font-bold animate-pulse">• • •</div>
         <p class="text-xs uppercase tracking-[0.4em] text-white/50">One more thing...</p>
     </div>
 
-    <!-- Video Element -->
+    <!-- Media Containers -->
     <video id="v" class="full-screen hidden" playsinline></video>
-    
-    <!-- Image Element -->
-    <img id="i" class="full-screen hidden" alt="Boo!">
+    <img id="i" class="full-screen hidden" alt="Surprise">
+    <div id="yt-container" class="full-screen hidden"></div>
 
     <!-- Audio Element for scream/surprise sound if image used -->
     <audio id="scream-audio" preload="auto">
@@ -69,31 +69,48 @@
             }
 
             const mediaUrl = cfg.jumpMedia || "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=1200";
+            const ytId = Twisher.getYouTubeId(mediaUrl);
+
+            // Preload media during suspense
+            if (!ytId) {
+                if (!mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i) && !mediaUrl.startsWith('data:video')) {
+                    const preloadImg = new Image();
+                    preloadImg.src = mediaUrl;
+                }
+            }
 
             // 1.5s Suspense delay
             setTimeout(() => {
                 document.getElementById('suspense').classList.add('opacity-0');
                 
-                const isVideo = mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
-                
-                if (isVideo) {
+                if (ytId) {
+                    // YouTube Shorts or Video
+                    const ytContainer = document.getElementById('yt-container');
+                    ytContainer.innerHTML = `
+                        <iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&controls=0&playsinline=1" 
+                                style="width:100%; height:100%; border:none;" 
+                                allow="autoplay" 
+                                allowfullscreen>
+                        </iframe>`;
+                    ytContainer.classList.remove('hidden');
+                    document.body.classList.add('shaking');
+                } else if (mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i) || mediaUrl.startsWith('data:video')) {
+                    // Direct Video
                     const v = document.getElementById('v');
                     v.src = mediaUrl;
                     v.classList.remove('hidden');
                     document.body.classList.add('shaking');
-                    
-                    v.play().catch(err => {
-                        console.log("Autoplay unmuted failed, muting:", err);
+                    v.play().catch(() => {
                         v.muted = true;
                         v.play();
                     });
                 } else {
+                    // Image (Etsy, Unsplash, Imgur, Data URL)
                     const img = document.getElementById('i');
                     img.src = mediaUrl;
                     img.classList.remove('hidden');
                     document.body.classList.add('shaking');
 
-                    // Play scream effect
                     const audio = document.getElementById('scream-audio');
                     if (audio) {
                         audio.play().catch(e => console.log("Audio blocked:", e));
