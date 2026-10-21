@@ -2,74 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Wait for it...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wait for it... 🤫</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .full-screen { position: fixed; inset: 0; width: 100vw; height: 100vh; object-cover: cover; z-index: 999; }
+        .full-screen { 
+            position: fixed; 
+            inset: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            object-fit: cover; 
+            z-index: 999; 
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-2px, -3px) rotate(-1deg); }
+            20% { transform: translate(-4px, 0px) rotate(1deg); }
+            30% { transform: translate(4px, 3px) rotate(0deg); }
+            40% { transform: translate(2px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, 3px) rotate(-1deg); }
+            60% { transform: translate(-4px, 2px) rotate(0deg); }
+            70% { transform: translate(4px, 2px) rotate(-1deg); }
+            80% { transform: translate(-2px, -2px) rotate(1deg); }
+            90% { transform: translate(2px, 3px) rotate(0deg); }
+            100% { transform: translate(1px, -3px) rotate(-1deg); }
+        }
+        .shaking {
+            animation: shake 0.2s infinite;
+        }
     </style>
 </head>
-<body class="bg-black min-h-screen flex items-center justify-center overflow-hidden">
+<body class="bg-black min-h-screen flex items-center justify-center overflow-hidden text-white font-mono select-none">
 
+    <!-- Suspense screen before scare -->
+    <div id="suspense" class="text-center p-8 transition-opacity duration-300">
+        <div class="text-6xl mb-4 animate-pulse">🤫</div>
+        <p class="text-xs uppercase tracking-[0.4em] text-white/50">One more thing...</p>
+    </div>
+
+    <!-- Video Element -->
     <video id="v" class="full-screen hidden" playsinline></video>
     
-    <img id="i" class="full-screen hidden">
+    <!-- Image Element -->
+    <img id="i" class="full-screen hidden" alt="Boo!">
 
+    <!-- Audio Element for scream/surprise sound if image used -->
+    <audio id="scream-audio" preload="auto">
+        <source src="https://cdn.freesound.org/previews/415/415209_5121236-lq.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Skip button for sensitive users -->
+    <button onclick="navigate('next')" class="fixed top-4 right-4 z-[1000] text-[10px] text-white/40 hover:text-white uppercase tracking-widest bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
+        Skip →
+    </button>
+
+    <!-- Engine Scripts -->
+    <script src="engine.js"></script>
     <script>
-        const API_URL = '/.netlify/functions/update-config';
+        function triggerScare() {
+            const cfg = window.config || {};
+            
+            // Check if jumpscare is disabled
+            if (cfg.showJumpscare === false || cfg.jumpMedia === 'none' || cfg.jumpMedia === 'false') {
+                navigate('next');
+                return;
+            }
 
-        async function triggerScare() {
-            try {
-                // 1. Fetch the URL from Neon
-                const res = await fetch(API_URL);
-                const config = await res.json();
-                const mediaUrl = config.jump_url; // Ensure this matches your Neon column name
+            const mediaUrl = cfg.jumpMedia || "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=1200";
 
-                if (!mediaUrl) {
-                    console.error("No jumpscare media found in DB");
-                    setTimeout(() => window.location.href = "gallery.html", 1000);
-                    return;
+            // 1.5s Suspense delay
+            setTimeout(() => {
+                document.getElementById('suspense').classList.add('opacity-0');
+                
+                const isVideo = mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+                
+                if (isVideo) {
+                    const v = document.getElementById('v');
+                    v.src = mediaUrl;
+                    v.classList.remove('hidden');
+                    document.body.classList.add('shaking');
+                    
+                    v.play().catch(err => {
+                        console.log("Autoplay unmuted failed, muting:", err);
+                        v.muted = true;
+                        v.play();
+                    });
+                } else {
+                    const img = document.getElementById('i');
+                    img.src = mediaUrl;
+                    img.classList.remove('hidden');
+                    document.body.classList.add('shaking');
+
+                    // Play scream effect
+                    const audio = document.getElementById('scream-audio');
+                    if (audio) {
+                        audio.play().catch(e => console.log("Audio blocked:", e));
+                    }
                 }
 
-                // 2. Wait 2 seconds for suspense
+                // Shake haptic
+                if (navigator.vibrate) navigator.vibrate([100, 50, 200, 50, 300]);
+
+                // Proceed to next page after 3.5 seconds
                 setTimeout(() => {
-                    const isVideo = mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
-                    
-                    if (isVideo) {
-                        const v = document.getElementById('v');
-                        v.src = mediaUrl;
-                        v.classList.remove('hidden');
-                        
-                        // Try to play. Note: If this fails, it's usually browser policy.
-                        // Pro-tip: The user clicking "Wish" or "Start" on previous pages 
-                        // usually counts as the required interaction.
-                        v.play().catch(err => {
-                            console.log("Autoplay blocked. Muting to force play.");
-                            v.muted = true;
-                            v.play();
-                        });
-                    } else {
-                        // Handle as Image
-                        const img = document.getElementById('i');
-                        img.src = mediaUrl;
-                        img.classList.remove('hidden');
-                    }
+                    navigate('next');
+                }, 3500);
 
-                    // 3. Shake effect (Optional)
-                    document.body.classList.add('animate-ping');
-
-                    // 4. Redirect to Gallery after 4 seconds
-                    setTimeout(() => window.location.href = "gallery.html", 4000);
-                }, 2000);
-
-            } catch (err) {
-                console.error("Scare failed:", err);
-                window.location.href = "gallery.html";
-            }
+            }, 1500);
         }
 
-        triggerScare();
+        window.addEventListener('load', triggerScare);
+        if (window.config) triggerScare();
     </script>
 </body>
 </html>
-
-<!-- made by pheonix14 -->
+<!-- Made by pheonix14 -->

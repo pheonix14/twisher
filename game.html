@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Wish.jar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Wish • Twisher</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         body { 
-            background-color: #1a1a1a; 
+            background-color: #0b0f19; 
             color: #fff; 
             font-family: 'Press Start 2P', cursive;
             image-rendering: pixelated;
@@ -16,24 +18,41 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             overflow: hidden;
+            user-select: none;
         }
 
-        /* Retro Handheld Screen Container */
+        /* Retro Handheld Shell */
+        .handheld-body {
+            background: linear-gradient(145deg, #2a2e3d, #1c202d);
+            border: 6px solid #131722;
+            border-radius: 40px;
+            padding: 24px 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 2px 4px rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            max-width: 340px;
+            width: 90%;
+        }
+
+        /* Handheld Screen Container */
         .handheld-screen {
-            width: 280px;
-            height: 280px;
-            background: #000;
-            border: 10px solid #333;
-            border-radius: 4px;
+            width: 100%;
+            height: 240px;
+            background: #05080f;
+            border: 6px solid #10141f;
+            border-radius: 12px;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 0 20px rgba(0,255,0,0.1);
+            box-shadow: inset 0 0 25px rgba(0,255,136,0.08);
+            overflow: hidden;
         }
 
         /* Scanline Overlay Effect */
@@ -41,14 +60,16 @@
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
             background-size: 100% 4px, 3px 100%;
             pointer-events: none;
         }
 
         /* Pixel Cake Components */
-        .cake-container { cursor: pointer; transform: scale(1.5); }
+        .cake-container { cursor: pointer; transform: scale(1.6); transition: transform 0.15s; }
+        .cake-container:hover { transform: scale(1.75); }
+        .cake-container:active { transform: scale(1.5); }
 
         #candle {
             width: 6px; height: 16px;
@@ -58,19 +79,20 @@
         }
 
         #flame {
-            width: 6px; height: 6px;
-            background: #ffae00; /* Retro Orange */
+            width: 8px; height: 10px;
+            background: #ffaa00;
             position: absolute;
-            top: -8px; left: 0;
+            top: -10px; left: -1px;
             display: none;
-            box-shadow: 0 0 5px #ffae00;
-            animation: flicker 0.1s steps(2) infinite;
+            box-shadow: 0 0 10px #ff7700, 0 0 20px #ffdd00;
+            border-radius: 4px 4px 1px 1px;
+            animation: flicker 0.12s steps(2) infinite;
         }
 
         .cake-body {
-            width: 48px; height: 32px;
+            width: 52px; height: 32px;
             border: 4px solid #fff;
-            background: #000;
+            background: #111;
             position: relative;
         }
 
@@ -78,91 +100,174 @@
             position: absolute;
             top: 8px; left: 0;
             width: 100%; height: 4px;
-            background: #fff;
+            background: #ff4081;
         }
 
         @keyframes flicker {
             0% { transform: translate(1px, 0); opacity: 1; }
-            100% { transform: translate(-1px, -1px); opacity: 0.8; }
+            100% { transform: translate(-1px, -1px); opacity: 0.85; }
         }
 
         /* Retro Buttons (A / B Style) */
         .controls {
-            margin-top: 40px;
+            margin-top: 24px;
             display: flex;
-            gap: 40px;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 15px;
+            align-items: center;
+        }
+
+        .dpad-placeholder {
+            display: grid;
+            grid-template-columns: repeat(3, 16px);
+            grid-template-rows: repeat(3, 16px);
+            gap: 2px;
+        }
+        .dpad-btn { background: #131722; border-radius: 2px; }
+        .dpad-btn.center { background: #181d2a; }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
         }
 
         .btn-round {
-            width: 50px; height: 50px;
+            width: 48px; height: 48px;
             border-radius: 50%;
-            background: #8b0000;
-            border: 4px solid #4a0000;
-            color: rgba(255,255,255,0.5);
-            font-size: 10px;
+            background: #991b1b;
+            border: 3px solid #450a0a;
+            color: #fff;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 0 #333;
+            box-shadow: 0 4px 0 #181d2a;
             cursor: pointer;
+            transition: all 0.1s;
         }
 
-        .btn-round:active { transform: translateY(2px); box-shadow: 0 2px 0 #333; }
-        .btn-round:disabled { filter: grayscale(1); cursor: not-allowed; opacity: 0.3; }
+        .btn-round:active { transform: translateY(3px); box-shadow: 0 1px 0 #181d2a; }
+        .btn-round:disabled { filter: grayscale(1); cursor: not-allowed; opacity: 0.35; transform: none; box-shadow: 0 4px 0 #181d2a; }
 
         #tap-msg {
-            font-size: 8px;
-            color: #0f0; /* Matrix Green */
-            margin-top: 30px;
-            letter-spacing: 2px;
-            animation: blink 0.8s steps(2) infinite;
+            font-size: 9px;
+            color: #00ff88;
+            margin-top: 22px;
+            letter-spacing: 1.5px;
+            animation: blink 0.9s steps(2) infinite;
+            text-align: center;
+            line-height: 1.5;
         }
 
-        @keyframes blink { to { opacity: 0; } }
+        @keyframes blink { to { opacity: 0.15; } }
+
+        .device-badge {
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.35);
+            margin-top: 18px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
-    <div class="handheld-screen">
-        <div class="cake-container" onclick="ignite()">
-            <div id="candle"><div id="flame"></div></div>
-            <div class="cake-body"><div class="cake-detail"></div></div>
+    <div class="handheld-body">
+        
+        <!-- Screen -->
+        <div class="handheld-screen">
+            <p id="screen-title" class="text-[8px] text-white/50 mb-3 tracking-widest uppercase">
+                MAKE A WISH
+            </p>
+
+            <div class="cake-container" onclick="ignite()">
+                <div id="candle"><div id="flame"></div></div>
+                <div class="cake-body"><div class="cake-detail"></div></div>
+            </div>
+
+            <p id="tap-msg">TAP CAKE<br>TO LIGHT IT</p>
         </div>
-        <p id="tap-msg">TAP IT</p>
+
+        <!-- Controls -->
+        <div class="controls">
+            <!-- D-Pad visual -->
+            <div class="dpad-placeholder">
+                <div></div><div class="dpad-btn"></div><div></div>
+                <div class="dpad-btn"></div><div class="dpad-btn center"></div><div class="dpad-btn"></div>
+                <div></div><div class="dpad-btn"></div><div></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-group">
+                <div class="flex flex-col items-center gap-1.5">
+                    <button onclick="navigate('prev')" class="btn-round" title="Back">B</button>
+                    <span class="text-[7px] text-white/40">BACK</span>
+                </div>
+                <div class="flex flex-col items-center gap-1.5">
+                    <button onclick="navigate('next')" id="next-btn" class="btn-round" disabled title="Proceed">A</button>
+                    <span class="text-[7px] text-white/40">NEXT</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Handheld branding & Pheonix14 Credit -->
+        <div class="device-badge">
+            TWISHER-BOY • BY PHEONIX14
+        </div>
     </div>
 
-    <div class="controls">
-        <div class="flex flex-col items-center gap-2">
-            <button onclick="navigate('prev')" class="btn-round">B</button>
-            <span class="text-[8px] opacity-40">EXIT</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-            <button onclick="navigate('next')" id="next-btn" class="btn-round" disabled>A</button>
-            <span class="text-[8px] opacity-40">NEXT</span>
-        </div>
-    </div>
-
+    <!-- Engine Scripts -->
     <script src="engine.js"></script>
     <script>
+        let isIgnited = false;
+
+        function applyGameData() {
+            const cfg = window.config || {};
+            const screenTitle = document.getElementById('screen-title');
+            
+            if (cfg.name && cfg.name !== "Bestie") {
+                screenTitle.innerText = `${cfg.name.toUpperCase()}'S CAKE`;
+            } else if (cfg.age && cfg.age !== "Special") {
+                screenTitle.innerText = `AGE ${cfg.age} CAKE`;
+            }
+        }
+
         function ignite() {
+            if (isIgnited) return;
+            isIgnited = true;
+
             const flame = document.getElementById('flame');
             const msg = document.getElementById('tap-msg');
             const nextBtn = document.getElementById('next-btn');
 
             flame.style.display = 'block';
-            msg.style.color = '#fff';
-            msg.innerText = "DONE!";
+            msg.style.color = '#ffeb3b';
+            msg.innerHTML = "WISH MADE! ✨<br>PRESS [A] TO GO";
             msg.style.animation = "none";
             
-            // Enable A Button
+            // Enable A Button with neon green glow
             nextBtn.disabled = false;
-            nextBtn.style.background = "#008000"; // Turn Green
-            nextBtn.style.borderColor = "#004d00";
+            nextBtn.style.background = "#10b981";
+            nextBtn.style.borderColor = "#047857";
+            nextBtn.style.boxShadow = "0 0 15px rgba(16, 185, 129, 0.7)";
 
-            if (navigator.vibrate) navigator.vibrate(40);
+            // Confetti effect
+            try {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.6 }
+                });
+            } catch(e){}
+
+            // Mobile vibration if available
+            if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
         }
+
+        window.addEventListener('load', applyGameData);
+        if (window.config) applyGameData();
     </script>
 </body>
 </html>
-
-<!-- made by pheonix14 -->
+<!-- Made by pheonix14 -->

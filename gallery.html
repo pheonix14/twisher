@@ -2,123 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Memories | Cloud Sync</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories Gallery • Twisher</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        .polaroid { transition: transform 0.3s ease; }
-        .polaroid:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10; }
-        .loader { border-top-color: #3498db; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #090d16;
+        }
+        .polaroid { 
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .polaroid:hover { 
+            transform: scale(1.06) rotate(0deg) !important; 
+            z-index: 20; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+        }
+        .font-cursive { 
+            font-family: 'Dancing Script', cursive; 
+        }
     </style>
 </head>
-<body class="bg-slate-900 min-h-screen p-6 md:p-12 transition-all duration-1000">
-    
-    <h1 class="text-center text-5xl font-black text-white italic mb-12 tracking-tighter">OUR MEMORIES</h1>
+<body class="min-h-screen p-6 md:p-12 text-white transition-all duration-1000 relative">
 
-    <div id="admin-zone" class="hidden max-w-xl mx-auto mb-16 p-8 bg-white rounded-[2.5rem] shadow-2xl">
-        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Admin: Add New Memory</h2>
-        <input type="text" id="img-url" placeholder="Paste Image URL (Cloudinary/ImgBB)..." class="w-full border p-3 rounded-xl mb-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-        <input type="text" id="cap" placeholder="Write a sweet caption..." class="w-full border p-3 rounded-xl mb-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-        <button onclick="addMemory()" id="add-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-2xl font-black transition-all shadow-lg active:scale-95">UPLOAD TO CLOUD</button>
+    <!-- Header -->
+    <header class="text-center mb-12">
+        <div class="inline-block px-4 py-1 rounded-full bg-white/10 border border-white/15 text-xs uppercase font-bold tracking-widest text-indigo-300 mb-3">
+            📸 Snapshot Collection
+        </div>
+        <h1 id="gallery-header" class="text-4xl md:text-6xl font-black italic tracking-tighter">
+            OUR MEMORIES
+        </h1>
+        <p id="gallery-sub" class="text-white/50 text-xs md:text-sm mt-2 max-w-md mx-auto">
+            Cherished moments that make life truly extraordinary.
+        </p>
+    </header>
+
+    <!-- Memories Grid -->
+    <div id="grid" class="flex flex-wrap justify-center gap-8 md:gap-12 max-w-6xl mx-auto pb-16">
+        <!-- Rendered dynamically via JavaScript -->
     </div>
 
-    <div id="grid" class="flex flex-wrap justify-center gap-12">
-        <div id="grid-loader" class="loader w-12 h-12 border-4 border-white/20 rounded-full mt-20"></div>
+    <!-- Navigation Action Bar -->
+    <div class="mt-8 mb-16 flex flex-wrap justify-center items-center gap-4">
+        <button onclick="navigate('prev')" class="px-8 py-4 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition font-bold text-xs uppercase tracking-wider">
+            ← Previous
+        </button>
+        <button onclick="location.href='index.html' + window.location.search + window.location.hash" class="px-10 py-4 rounded-full bg-white text-slate-900 font-black hover:scale-105 active:scale-95 transition shadow-2xl text-sm">
+            Restart Journey ↺
+        </button>
+        <a id="edit-memories-link" href="admin.html" class="px-6 py-4 rounded-full bg-indigo-600/80 hover:bg-indigo-600 text-white transition text-xs font-bold uppercase tracking-wider">
+            ⚙️ Edit in Studio
+        </a>
     </div>
 
-    <div class="mt-20 flex justify-center gap-6">
-        <button onclick="window.history.back()" class="px-10 py-4 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition">← Back</button>
-        <button onclick="location.href='index.html'" class="px-12 py-4 rounded-full bg-white text-black font-black hover:scale-105 transition shadow-xl">Home →</button>
-    </div>
+    <!-- UI Credit Section -->
+    <footer class="text-center text-xs text-white/40 pb-10">
+        <p>Twisher Memories Engine • Handcrafted with 💖 by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a></p>
+    </footer>
 
+    <!-- Engine Scripts -->
+    <script src="engine.js"></script>
     <script>
-        const API_URL = '/.netlify/functions/manage-memories';
-        const AUTH_TOKEN = sessionStorage.getItem('admin_token');
-        const isAdmin = AUTH_TOKEN === 'pheonix14';
+        function renderMemories() {
+            const cfg = window.config || {};
+            
+            // Personalize Title
+            if (cfg.name && cfg.name !== "Bestie") {
+                document.getElementById('gallery-header').innerText = `MEMORIES WITH ${cfg.name.toUpperCase()}`;
+            }
 
-        // Show admin zone if logged in
-        if(isAdmin) {
-            document.getElementById('admin-zone').classList.remove('hidden');
-        }
+            const memories = cfg.memories || [];
+            const grid = document.getElementById('grid');
 
-        // FETCH Memories from Neon
-        async function render() {
-            try {
-                const res = await fetch(API_URL);
-                const mems = await res.json();
-                
-                const grid = document.getElementById('grid');
-                if (mems.length === 0) {
-                    grid.innerHTML = `<p class="text-white/30 italic">No memories yet. Add some from the admin panel!</p>`;
-                    return;
-                }
-
-                grid.innerHTML = mems.map((m, i) => `
-                    <div class="polaroid bg-white p-4 shadow-2xl rotate-${i % 2 === 0 ? '2' : '-2'} w-72">
-                        <div class="overflow-hidden bg-gray-100 mb-3">
-                            <img src="${m.src}" class="w-full h-56 object-cover hover:scale-110 transition duration-700" onerror="this.src='https://placehold.co/400x300?text=Invalid+Link'">
-                        </div>
-                        <p class="text-center italic text-gray-700 font-serif text-lg py-2">${m.caption || '...'}</p>
-                        ${isAdmin ? `<button onclick="deleteMemory(${m.id})" class="text-[10px] uppercase tracking-tighter text-red-400 font-bold block mx-auto mt-4 hover:text-red-600">Remove Photo</button>` : ''}
+            if (memories.length === 0) {
+                grid.innerHTML = `
+                    <div class="text-center p-12 bg-white/5 rounded-3xl border border-white/10 max-w-md mx-auto">
+                        <p class="text-4xl mb-4">📷</p>
+                        <h3 class="text-xl font-bold mb-2">No Memories Added Yet</h3>
+                        <p class="text-xs text-white/50 mb-6">Open Studio Admin to attach sweet photo moments to this surprise link!</p>
+                        <a href="admin.html${window.location.search}${window.location.hash}" class="inline-block bg-white text-black px-6 py-3 rounded-full font-bold text-xs">
+                            Add Photos Now →
+                        </a>
                     </div>
-                `).join('');
-            } catch (err) {
-                document.getElementById('grid').innerHTML = `<p class="text-red-400">Error connecting to Neon database.</p>`;
+                `;
+                return;
             }
+
+            const rotations = ['-2deg', '2deg', '-1deg', '3deg', '-3deg', '1.5deg'];
+
+            grid.innerHTML = memories.map((m, i) => {
+                const rot = rotations[i % rotations.length];
+                const caption = m.caption || 'Unforgettable memory ✨';
+                const imgSrc = m.src || 'https://placehold.co/600x450/1e293b/ffffff?text=Twisher+Memory';
+
+                return `
+                    <div class="polaroid bg-white text-slate-900 p-4 rounded-2xl w-72 md:w-80" style="transform: rotate(${rot});">
+                        <div class="overflow-hidden bg-slate-100 rounded-xl mb-3 h-64 shadow-inner">
+                            <img src="${imgSrc}" alt="Memory" class="w-full h-full object-cover hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x450/1e293b/ffffff?text=Image+Not+Found'">
+                        </div>
+                        <p class="font-cursive text-2xl text-center text-slate-800 py-2 leading-relaxed">
+                            ${escapeHtml(caption)}
+                        </p>
+                    </div>
+                `;
+            }).join('');
         }
 
-        // ADD Memory to Neon
-        async function addMemory() {
-            const src = document.getElementById('img-url').value;
-            const caption = document.getElementById('cap').value;
-            const btn = document.getElementById('add-btn');
-
-            if(!src) return alert("Please paste an image URL first!");
-
-            btn.innerText = "SAVING...";
-            btn.disabled = true;
-
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': AUTH_TOKEN 
-                    },
-                    body: JSON.stringify({ src, caption })
-                });
-
-                if(res.ok) {
-                    document.getElementById('img-url').value = '';
-                    document.getElementById('cap').value = '';
-                    render();
-                }
-            } catch (err) {
-                alert("Failed to save. Check Netlify logs.");
-            } finally {
-                btn.innerText = "UPLOAD TO CLOUD";
-                btn.disabled = false;
-            }
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        // DELETE Memory from Neon
-        async function deleteMemory(id) {
-            if(!confirm("Delete this memory forever?")) return;
-
-            await fetch(API_URL, {
-                method: 'DELETE',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': AUTH_TOKEN 
-                },
-                body: JSON.stringify({ id })
-            });
-            render();
-        }
-
-        render();
+        window.addEventListener('load', renderMemories);
+        if (window.config) renderMemories();
     </script>
 </body>
 </html>
-
-<!-- made by pheonix14 -->
+<!-- Made by pheonix14 -->

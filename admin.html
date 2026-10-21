@@ -2,226 +2,623 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Studio Admin | Pheonix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twisher Studio Admin • by pheonix14</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Circular Color Picker Styling from your old version */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
         #color-circle {
-            width: 150px;
-            height: 150px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            border: none;
+            border: 3px solid rgba(255,255,255,0.2);
             cursor: pointer;
             padding: 0;
             overflow: hidden;
+            transition: transform 0.2s;
+        }
+        #color-circle:hover {
+            transform: scale(1.05);
         }
         #color-circle::-webkit-color-swatch-wrapper { padding: 0; }
         #color-circle::-webkit-color-swatch { border: none; border-radius: 50%; }
         
-        .file-label {
-            display: block;
-            background: #f3f4f6;
-            border: 2px dashed #d1d5db;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
+        .custom-input {
+            width: 100%;
+            background: #151b2b;
+            border: 1px solid #28334e;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s;
         }
-        .file-label:hover { border-color: #6366f1; background: #eef2ff; }
-        
-        /* New Sync Loader */
-        .loading-overlay {
-            display: flex;
+        .custom-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: #192033;
+        }
+
+        .section-card {
+            background: #111726;
+            border: 1px solid #1e293b;
+            border-radius: 24px;
+            padding: 24px;
+        }
+
+        .preset-chip {
+            background: #1c2438;
+            border: 1px solid #2d3a58;
+            color: #94a3b8;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .preset-chip:hover {
+            background: #313f63;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+
+        .toast-notify {
             position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.9);
-            z-index: 100;
-            color: white;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-notify.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+<body class="min-h-screen p-4 md:p-8">
 
-    <div id="loader" class="loading-overlay" style="display: none;">
-        <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="font-bold tracking-widest uppercase text-xs">Syncing Studio Assets...</p>
-    </div>
+    <div id="toast" class="toast-notify">✨ Link Copied to Clipboard!</div>
 
-    <div class="max-w-6xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100">
-        <div class="bg-slate-900 p-8 text-white flex justify-between items-center">
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 rounded-[32px] border border-white/10 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
             <div>
-                <h1 class="text-3xl font-black italic tracking-tighter uppercase">Studio Admin</h1>
-                <p class="opacity-50 text-xs uppercase tracking-widest">Upload Assets & Configure Flow</p>
-            </div>
-            <button onclick="location.href='index.html'" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition">✕</button>
-        </div>
-
-        <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
-            
-            <div class="space-y-6">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">1. Visuals</h3>
-                <div class="flex flex-col items-center">
-                    <label class="text-xs mb-2 text-slate-500 uppercase">Theme Color</label>
-                    <input type="color" id="color-circle" oninput="updatePreviewColor(this.value)">
-                    <span id="hex-code" class="mt-2 font-mono text-sm">#000000</span>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2">
+                    <span>⚡</span> Zero-Database URL Architecture
                 </div>
-
-                <div>
-                    <label class="text-xs text-slate-500 block mb-2 uppercase font-bold">Custom Background Image</label>
-                    <label class="file-label">
-                        <span id="bg-status" class="text-xs text-slate-400 italic">Click to Upload BG</span>
-                        <input type="file" id="bg-upload" class="hidden" accept="image/*" onchange="handleFileUpload(this, 'bgImg', 'bg-status')">
-                    </label>
-                </div>
+                <h1 class="text-3xl md:text-4xl font-black italic tracking-tight uppercase text-white flex items-center gap-3">
+                    Twisher Studio
+                </h1>
+                <p class="text-white/50 text-xs md:text-sm mt-1">
+                    Create independent surprise links for <span class="text-indigo-300 font-bold">100s of different users</span> — all encoded directly in the URL!
+                </p>
             </div>
 
-            <div class="space-y-6">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">2. Media Files</h3>
-                
-                <div>
-                    <label class="text-xs text-slate-500 block mb-2 uppercase font-bold">Background Music (MP3)</label>
-                    <label class="file-label">
-                        <span id="music-status" class="text-xs text-slate-400">Attach MP3 File</span>
-                        <input type="file" id="music-upload" class="hidden" accept="audio/*" onchange="handleFileUpload(this, 'bgMusic', 'music-status')">
-                    </label>
-                </div>
+            <div class="flex items-center gap-3">
+                <a href="index.html" id="back-home-btn" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition flex items-center gap-2">
+                    <span>👁️ Preview</span>
+                </a>
+            </div>
+        </header>
 
+        <!-- SHAREABLE LINK HERO SECTION (Core Solution for 100s of Users) -->
+        <section class="section-card bg-gradient-to-b from-indigo-950/60 to-slate-900/90 border-indigo-500/40 shadow-[0_0_40px_rgba(99,102,241,0.15)]">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                 <div>
-                    <label class="text-xs text-slate-500 block mb-2 uppercase font-bold text-indigo-500">Floating Popup Video (MP4)</label>
-                    <label class="file-label border-indigo-200">
-                        <span id="popup-status" class="text-xs text-slate-400">Attach MP4 File</span>
-                        <input type="file" id="popup-upload" class="hidden" accept="video/*" onchange="handleFileUpload(this, 'popupVid', 'popup-status')">
-                    </label>
+                    <h2 class="text-lg font-black uppercase tracking-tight text-white flex items-center gap-2">
+                        <span>🔗</span> Unique Sharable Link For Recipient
+                    </h2>
+                    <p class="text-xs text-white/60">
+                        Everything (Name, Age, Wish, Countdown, Colors, Photos) is stored safely in this link. Send it to anyone on any browser!
+                    </p>
                 </div>
-
-                <div>
-                    <label class="text-xs text-red-500 font-bold block mb-2 uppercase">Jumpscare Media (MP4)</label>
-                    <label class="file-label border-red-200 bg-red-50">
-                        <span id="jump-status" class="text-xs text-red-400">Attach Scare File</span>
-                        <input type="file" id="jump-upload" class="hidden" accept="video/*,audio/*" onchange="handleFileUpload(this, 'jumpMedia', 'jump-status')">
-                    </label>
+                <div class="flex items-center gap-2">
+                    <span id="link-size-badge" class="code-font text-[10px] bg-indigo-900/60 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30">
+                        URL Ready
+                    </span>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">3. Page Order</h3>
+            <!-- Link Box -->
+            <div class="flex flex-col sm:flex-row gap-2 mb-4">
+                <input type="text" id="shareable-url-input" readonly onclick="this.select()" class="custom-input code-font text-xs bg-slate-950 border-indigo-500/40 text-indigo-200 select-all py-3.5">
+                <button onclick="copyShareableUrl()" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-lg shrink-0 flex items-center justify-center gap-2">
+                    <span>📋</span> Copy Link
+                </button>
+            </div>
+
+            <!-- Quick Action Row -->
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button onclick="shareOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                    <span>💬</span> Share via WhatsApp
+                </button>
+                <button onclick="openShareableUrl()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <span>🚀</span> Test in New Tab
+                </button>
+                <button onclick="saveCurrentProfile()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <span>💾</span> Save to My Profiles
+                </button>
+                <div class="ml-auto flex items-center gap-2">
+                    <label class="text-xs text-white/40">Switch Profile:</label>
+                    <select id="profile-selector" onchange="loadSelectedProfile(this.value)" class="bg-slate-950 text-xs text-white border border-white/20 rounded-xl px-3 py-1.5 outline-none">
+                        <option value="">Default Profile</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN CONFIGURATION GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- 1. PERSON & MESSAGE -->
+            <div class="section-card space-y-4">
+                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
+                    <span class="text-indigo-400">👤</span>
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">1. Recipient & Message</h3>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Recipient Name</label>
+                    <input type="text" id="cfg-name" placeholder="e.g. Sarah, Bro, Alex" oninput="updateAll()" class="custom-input">
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Age or Milestone</label>
+                    <input type="text" id="cfg-age" placeholder="e.g. 21, 18, Sweet 16" oninput="updateAll()" class="custom-input">
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Sender Name (From)</label>
+                    <input type="text" id="cfg-from" placeholder="e.g. Alex, pheonix14" oninput="updateAll()" class="custom-input">
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Wish Headline</label>
+                    <input type="text" id="cfg-wish" placeholder="🎉 HAPPY BIRTHDAY!" oninput="updateAll()" class="custom-input">
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Personal Note / Subtext</label>
+                    <textarea id="cfg-sub" rows="3" placeholder="Write something sweet and memorable..." oninput="updateAll()" class="custom-input"></textarea>
+                </div>
+            </div>
+
+            <!-- 2. COUNTDOWN & VISUAL THEME -->
+            <div class="section-card space-y-4">
+                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
+                    <span class="text-pink-400">🎨</span>
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">2. Countdown & Theme</h3>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Target Countdown Date</label>
+                    <input type="datetime-local" id="cfg-date" onchange="updateAll()" class="custom-input">
+                </div>
+
+                <div class="flex flex-col items-center p-4 bg-slate-950/60 rounded-2xl border border-white/5">
+                    <label class="text-[11px] text-white/50 block mb-2 font-bold uppercase">Primary Theme Color</label>
+                    <input type="color" id="color-circle" value="#6366f1" oninput="updateColorPreview(this.value)">
+                    <span id="hex-code" class="mt-2 code-font text-xs text-white/70">#6366F1</span>
+                    
+                    <!-- Color Swatches -->
+                    <div class="flex gap-2 mt-3 flex-wrap justify-center">
+                        <button onclick="setColor('#6366f1')" class="w-6 h-6 rounded-full bg-[#6366f1] border border-white/20 hover:scale-110 transition" title="Indigo"></button>
+                        <button onclick="setColor('#ec4899')" class="w-6 h-6 rounded-full bg-[#ec4899] border border-white/20 hover:scale-110 transition" title="Rose"></button>
+                        <button onclick="setColor('#06b6d4')" class="w-6 h-6 rounded-full bg-[#06b6d4] border border-white/20 hover:scale-110 transition" title="Cyan"></button>
+                        <button onclick="setColor('#eab308')" class="w-6 h-6 rounded-full bg-[#eab308] border border-white/20 hover:scale-110 transition" title="Amber"></button>
+                        <button onclick="setColor('#10b981')" class="w-6 h-6 rounded-full bg-[#10b981] border border-white/20 hover:scale-110 transition" title="Emerald"></button>
+                        <button onclick="setColor('#8b5cf6')" class="w-6 h-6 rounded-full bg-[#8b5cf6] border border-white/20 hover:scale-110 transition" title="Violet"></button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Custom Background Image URL</label>
+                    <input type="text" id="cfg-bg" placeholder="Paste image URL (Unsplash, Imgur...)" oninput="updateAll()" class="custom-input text-xs">
+                    <div class="flex gap-1.5 mt-2 flex-wrap">
+                        <span onclick="setBg('https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1600')" class="preset-chip">🎉 Confetti</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600')" class="preset-chip">🎈 Balloons</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=1600')" class="preset-chip">✨ Stars</span>
+                        <span onclick="setBg('')" class="preset-chip text-red-400">Clear</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. MEDIA (MUSIC, POPUP, JUMPSCARE) -->
+            <div class="section-card space-y-4">
+                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
+                    <span class="text-amber-400">🎵</span>
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">3. Audio & Special Effects</h3>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Background Music Audio URL</label>
+                    <input type="text" id="cfg-music" placeholder="Audio URL (.mp3 / .ogg)" oninput="updateAll()" class="custom-input text-xs">
+                    <div class="flex gap-1.5 mt-2 flex-wrap">
+                        <span onclick="setMusic('https://cdn.freesound.org/previews/456/456965_5121236-lq.mp3')" class="preset-chip">🎺 Celebration</span>
+                        <span onclick="setMusic('https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3')" class="preset-chip">🎉 Party Tune</span>
+                        <span onclick="setMusic('https://cdn.freesound.org/previews/566/566384_6142149-lq.mp3')" class="preset-chip">🎸 Acoustic</span>
+                        <span onclick="setMusic('')" class="preset-chip text-red-400">Mute</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Floating Mascot / Video Popup URL</label>
+                    <input type="text" id="cfg-popup" placeholder="GIF or MP4 URL" oninput="updateAll()" class="custom-input text-xs">
+                    <div class="flex gap-1.5 mt-2 flex-wrap">
+                        <span onclick="setPopup('https://media.giphy.com/media/blSTtZehjAZ8I/giphy.gif')" class="preset-chip">🐶 Party Dog</span>
+                        <span onclick="setPopup('https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif')" class="preset-chip">🐱 Confetti Cat</span>
+                        <span onclick="setPopup('')" class="preset-chip text-red-400">None</span>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-red-950/20 border border-red-900/40 rounded-2xl space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[11px] text-red-300 font-bold uppercase">💀 Jumpscare Feature</label>
+                        <input type="checkbox" id="cfg-scare-enabled" checked onchange="updateAll()" class="w-4 h-4 accent-red-500 cursor-pointer">
+                    </div>
+                    <input type="text" id="cfg-scare" placeholder="Jumpscare image/video URL" oninput="updateAll()" class="custom-input text-xs">
+                    <div class="flex gap-1.5 flex-wrap">
+                        <span onclick="setScare('https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=800')" class="preset-chip">🎃 Spooky Pumpkin</span>
+                        <span onclick="setScare('https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?w=800')" class="preset-chip">👻 Ghost Face</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. MEMORIES GALLERY MANAGER -->
+            <div class="section-card md:col-span-2 space-y-4">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-400">📸</span>
+                        <h3 class="text-xs font-black text-white uppercase tracking-wider">4. Memories Gallery (Polaroids)</h3>
+                    </div>
+                    <button onclick="addMemoryPrompt()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition">
+                        + Add Memory
+                    </button>
+                </div>
+
+                <!-- Add Memory Inline Form -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-950/40 p-3 rounded-2xl border border-white/5">
+                    <input type="text" id="new-mem-url" placeholder="Photo URL (Imgur, Unsplash...)" class="custom-input text-xs sm:col-span-2">
+                    <input type="text" id="new-mem-cap" placeholder="Sweet Caption" class="custom-input text-xs">
+                    <div class="sm:col-span-3 flex justify-end">
+                        <button onclick="submitNewMemory()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                            Attach Photo to Link
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Memory List -->
+                <div id="memories-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+
+            <!-- 5. JOURNEY FLOW (DRAGGABLE) -->
+            <div class="section-card space-y-4">
+                <div class="flex items-center gap-2 border-b border-white/10 pb-3">
+                    <span class="text-purple-400">🔀</span>
+                    <h3 class="text-xs font-black text-white uppercase tracking-wider">5. Drag Page Order</h3>
+                </div>
+
+                <p class="text-[11px] text-white/50">Drag pages to customize the sequence of the surprise:</p>
+
                 <ul id="page-list" class="space-y-2">
-                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm cursor-move shadow-sm" data-id="index.html">🏠 Home <span>⠿</span></li>
-                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm cursor-move shadow-sm" data-id="game.html">🎮 Pixel Game <span>⠿</span></li>
-                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm cursor-move shadow-sm" data-id="wish.html">🎂 Wish <span>⠿</span></li>
-                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm cursor-move shadow-sm" data-id="jumpscare.html">💀 Jumpscare <span>⠿</span></li>
-                    <li class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center text-sm cursor-move shadow-sm" data-id="gallery.html">📸 Gallery <span>⠿</span></li>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="index.html">
+                        <span>🏠 1. Home Countdown</span> <span>⠿</span>
+                    </li>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="game.html">
+                        <span>🎮 2. Pixel Wish Cake</span> <span>⠿</span>
+                    </li>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="wish.html">
+                        <span>🎂 3. Big Confetti Wish</span> <span>⠿</span>
+                    </li>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="jumpscare.html">
+                        <span>💀 4. Surprise Jumpscare</span> <span>⠿</span>
+                    </li>
+                    <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="gallery.html">
+                        <span>📸 5. Photo Polaroids</span> <span>⠿</span>
+                    </li>
                 </ul>
-                
-                <div class="pt-4">
-                    <label class="text-xs text-slate-500 block mb-2 uppercase font-bold">Countdown Date</label>
-                    <input type="datetime-local" id="conf-date" class="w-full border p-4 rounded-xl bg-slate-50 text-sm outline-none">
-                </div>
             </div>
         </div>
 
-        <div class="p-8 bg-slate-900 border-t flex justify-between items-center">
-            <button onclick="localStorage.clear(); sessionStorage.clear(); location.reload();" class="text-white/30 hover:text-white text-xs underline">Wipe All Storage</button>
-            <button onclick="saveEverything()" class="bg-indigo-500 text-white px-14 py-5 rounded-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all uppercase tracking-tight">SAVE & PUBLISH</button>
-        </div>
+        <!-- FOOTER & PHEONIX14 CREDIT -->
+        <footer class="p-8 bg-slate-900/60 rounded-[28px] border border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
+            <div>
+                <p class="font-bold text-white flex items-center gap-2">
+                    Twisher Studio Engine • Created with 💖 by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a>
+                </p>
+                <p class="text-[11px] text-white/40 mt-1">
+                    100% Serverless & Zero-Database Architecture • Hosted on GitHub Pages
+                </p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="resetToDefaults()" class="text-white/40 hover:text-red-400 transition underline text-[11px]">
+                    Reset to Defaults
+                </button>
+                <button onclick="copyShareableUrl()" class="bg-white text-slate-900 font-black px-6 py-2.5 rounded-full hover:scale-105 active:scale-95 transition shadow-lg">
+                    Copy Share Link 🔗
+                </button>
+            </div>
+        </footer>
+
     </div>
 
+    <!-- Scripts -->
+    <script src="engine.js"></script>
     <script>
-        const API_URL = '/.netlify/functions/update-config';
-        let configData = {};
+        let currentConfig = Object.assign({}, Twisher.DEFAULT_CONFIG);
+        let sortableInstance = null;
 
-        // Password Check (Original logic)
-        if(sessionStorage.getItem('adminActive') !== 'true') {
-            if(prompt("Enter Admin Pass:") === "pheonix14") sessionStorage.setItem('adminActive', 'true');
-            else window.location.href = "index.html";
-        }
-
-        // Sortable Setup (Original logic)
+        // Initialize Sortable
         const el = document.getElementById('page-list');
-        Sortable.create(el, { animation: 150 });
+        sortableInstance = Sortable.create(el, {
+            animation: 150,
+            onEnd: () => {
+                const order = Array.from(el.children).map(li => li.getAttribute('data-id'));
+                currentConfig.pageOrder = order;
+                updateAll();
+            }
+        });
 
-        function updatePreviewColor(val) {
-            document.getElementById('hex-code').innerText = val.toUpperCase();
+        // Setters for presets
+        function setColor(hex) {
+            document.getElementById('color-circle').value = hex;
+            updateColorPreview(hex);
+            updateAll();
+        }
+        function updateColorPreview(hex) {
+            document.getElementById('hex-code').innerText = hex.toUpperCase();
+            currentConfig.themeColor = hex;
+            updateAll();
+        }
+        function setBg(url) {
+            document.getElementById('cfg-bg').value = url;
+            currentConfig.bgImg = url;
+            updateAll();
+        }
+        function setMusic(url) {
+            document.getElementById('cfg-music').value = url;
+            currentConfig.bgMusic = url;
+            updateAll();
+        }
+        function setPopup(url) {
+            document.getElementById('cfg-popup').value = url;
+            currentConfig.popupVid = url;
+            updateAll();
+        }
+        function setScare(url) {
+            document.getElementById('cfg-scare').value = url;
+            currentConfig.jumpMedia = url;
+            updateAll();
         }
 
-        // File Handler (Kept your logic, but stores in configData for sync)
-        function handleFileUpload(input, storageKey, statusId) {
-            const file = input.files[0];
-            if (!file) return;
+        // Memory Handling
+        function submitNewMemory() {
+            const urlInput = document.getElementById('new-mem-url');
+            const capInput = document.getElementById('new-mem-cap');
+            const url = urlInput.value.trim();
+            const cap = capInput.value.trim() || 'A cherished memory ✨';
 
-            document.getElementById(statusId).innerText = "⏳ Processing " + file.name + "...";
+            if (!url) {
+                alert("Please provide an image URL first!");
+                return;
+            }
+
+            if (!Array.isArray(currentConfig.memories)) currentConfig.memories = [];
+            currentConfig.memories.push({ src: url, caption: cap });
+            urlInput.value = '';
+            capInput.value = '';
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                configData[storageKey] = e.target.result;
-                // Also save to local for fallback
-                localStorage.setItem(storageKey, e.target.result);
-                document.getElementById(statusId).innerHTML = `<span style="color:#10b981">✅ Ready: ${file.name}</span>`;
-            };
-            reader.readAsDataURL(file);
+            renderMemoriesList();
+            updateAll();
+            showToast("📸 Memory Added to Link!");
         }
 
-        // Save Everything (Now talks to Netlify Functions)
-        async function saveEverything() {
-            document.getElementById('loader').style.display = 'flex';
-            
-            const order = Array.from(el.children).map(li => li.getAttribute('data-id'));
-            const payload = {
-                ...configData,
-                pageOrder: order,
-                themeColor: document.getElementById('color-circle').value,
-                targetDate: document.getElementById('conf-date').value
-            };
+        function removeMemory(index) {
+            if (!currentConfig.memories) return;
+            currentConfig.memories.splice(index, 1);
+            renderMemoriesList();
+            updateAll();
+        }
 
+        function renderMemoriesList() {
+            const container = document.getElementById('memories-list');
+            const mems = currentConfig.memories || [];
+
+            if (mems.length === 0) {
+                container.innerHTML = `<p class="text-xs text-white/30 italic col-span-full">No memories attached yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = mems.map((m, idx) => `
+                <div class="relative bg-slate-900 border border-white/10 p-2.5 rounded-xl flex items-center gap-3">
+                    <img src="${m.src}" alt="Mem" class="w-12 h-12 rounded-lg object-cover bg-slate-800 shrink-0" onerror="this.src='https://placehold.co/100?text=Err'">
+                    <div class="overflow-hidden flex-1">
+                        <p class="text-xs font-bold truncate text-white">${escapeHtml(m.caption)}</p>
+                        <p class="text-[10px] text-white/40 truncate">${escapeHtml(m.src)}</p>
+                    </div>
+                    <button onclick="removeMemory(${idx})" class="text-red-400 hover:text-red-300 p-1 text-xs" title="Remove">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // Core Synchronizer: Gathers form inputs and generates link
+        function updateAll() {
+            currentConfig.name = document.getElementById('cfg-name').value.trim();
+            currentConfig.age = document.getElementById('cfg-age').value.trim();
+            currentConfig.from = document.getElementById('cfg-from').value.trim();
+            currentConfig.wish = document.getElementById('cfg-wish').value.trim();
+            currentConfig.sub = document.getElementById('cfg-sub').value.trim();
+            currentConfig.targetDate = document.getElementById('cfg-date').value;
+            currentConfig.themeColor = document.getElementById('color-circle').value;
+            currentConfig.bgImg = document.getElementById('cfg-bg').value.trim();
+            currentConfig.bgMusic = document.getElementById('cfg-music').value.trim();
+            currentConfig.popupVid = document.getElementById('cfg-popup').value.trim();
+            currentConfig.jumpMedia = document.getElementById('cfg-scare').value.trim();
+            currentConfig.showJumpscare = document.getElementById('cfg-scare-enabled').checked;
+
+            // Generate the link
+            const url = Twisher.generateShareUrl(currentConfig, 'index.html');
+            const urlInput = document.getElementById('shareable-url-input');
+            urlInput.value = url;
+
+            // Update Preview button href
+            document.getElementById('back-home-btn').href = url;
+
+            // Update badge info
+            document.getElementById('link-size-badge').innerText = `${url.length} chars (Ready to share)`;
+
+            // Save active config in localStorage
+            localStorage.setItem('twisher_active_config', JSON.stringify(currentConfig));
+        }
+
+        // Copy Shareable URL
+        function copyShareableUrl() {
+            const input = document.getElementById('shareable-url-input');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value).then(() => {
+                showToast("📋 Link Copied! Send it to your friend.");
+            }).catch(() => {
+                document.execCommand('copy');
+                showToast("📋 Link Copied!");
+            });
+        }
+
+        function shareOnWhatsApp() {
+            const url = document.getElementById('shareable-url-input').value;
+            const text = encodeURIComponent(`Hey! I made a personalized surprise experience for you! Open this link: ${url}`);
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function openShareableUrl() {
+            const url = document.getElementById('shareable-url-input').value;
+            window.open(url, '_blank');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Profile Management (Enables saving 100s of different users locally)
+        function getProfiles() {
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': 'pheonix14' 
-                    },
-                    body: JSON.stringify(payload)
+                return JSON.parse(localStorage.getItem('twisher_saved_profiles') || '{}');
+            } catch(e) {
+                return {};
+            }
+        }
+
+        function saveCurrentProfile() {
+            const defaultName = currentConfig.name ? `${currentConfig.name}'s Surprise` : 'New Profile';
+            const name = prompt("Enter a profile title to save (e.g. Sarah Bday, Mom 50th):", defaultName);
+            if (!name) return;
+
+            const profiles = getProfiles();
+            profiles[name] = currentConfig;
+            localStorage.setItem('twisher_saved_profiles', JSON.stringify(profiles));
+            updateProfileDropdown();
+            showToast(`💾 Saved profile "${name}"!`);
+        }
+
+        function updateProfileDropdown() {
+            const sel = document.getElementById('profile-selector');
+            const profiles = getProfiles();
+            sel.innerHTML = '<option value="">-- Saved Profiles --</option>';
+            for (const key of Object.keys(profiles)) {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.innerText = key;
+                sel.appendChild(opt);
+            }
+        }
+
+        function loadSelectedProfile(name) {
+            if (!name) return;
+            const profiles = getProfiles();
+            if (profiles[name]) {
+                currentConfig = profiles[name];
+                populateForm(currentConfig);
+                updateAll();
+                showToast(`📂 Loaded profile "${name}"!`);
+            }
+        }
+
+        function resetToDefaults() {
+            if (!confirm("Reset all settings to default template?")) return;
+            currentConfig = Object.assign({}, Twisher.DEFAULT_CONFIG);
+            populateForm(currentConfig);
+            updateAll();
+            showToast("↺ Reset to default template");
+        }
+
+        function populateForm(cfg) {
+            document.getElementById('cfg-name').value = cfg.name || '';
+            document.getElementById('cfg-age').value = cfg.age || '';
+            document.getElementById('cfg-from').value = cfg.from || '';
+            document.getElementById('cfg-wish').value = cfg.wish || '';
+            document.getElementById('cfg-sub').value = cfg.sub || '';
+            document.getElementById('cfg-date').value = cfg.targetDate || '';
+            document.getElementById('color-circle').value = cfg.themeColor || '#6366f1';
+            document.getElementById('hex-code').innerText = (cfg.themeColor || '#6366f1').toUpperCase();
+            document.getElementById('cfg-bg').value = cfg.bgImg || '';
+            document.getElementById('cfg-music').value = cfg.bgMusic || '';
+            document.getElementById('cfg-popup').value = cfg.popupVid || '';
+            document.getElementById('cfg-scare').value = cfg.jumpMedia || '';
+            document.getElementById('cfg-scare-enabled').checked = (cfg.showJumpscare !== false);
+
+            // Rebuild sortable order list if pageOrder exists
+            if (Array.isArray(cfg.pageOrder)) {
+                const list = document.getElementById('page-list');
+                const itemsMap = {};
+                Array.from(list.children).forEach(li => {
+                    itemsMap[li.getAttribute('data-id')] = li;
                 });
-
-                if (res.ok) {
-                    alert("Site Published Successfully!");
-                } else {
-                    const err = await res.text();
-                    alert("Sync Error: " + err);
-                }
-            } catch (err) {
-                alert("Network Error: Make sure your Netlify function is deployed.");
+                cfg.pageOrder.forEach(pageId => {
+                    if (itemsMap[pageId]) list.appendChild(itemsMap[pageId]);
+                });
             }
-            document.getElementById('loader').style.display = 'none';
+
+            renderMemoriesList();
         }
 
-        // Initial Load (Pull from Cloud)
-        async function init() {
-            document.getElementById('loader').style.display = 'flex';
-            try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-                
-                if (data.themeColor) {
-                    document.getElementById('color-circle').value = data.themeColor;
-                    document.getElementById('hex-code').innerText = data.themeColor.toUpperCase();
-                }
-                if (data.targetDate) document.getElementById('conf-date').value = data.targetDate;
-                configData = data;
-            } catch (e) {
-                console.log("No remote config found, using local defaults.");
-            }
-            document.getElementById('loader').style.display = 'none';
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
-        init();
+
+        // Initialize Studio
+        window.addEventListener('DOMContentLoaded', () => {
+            currentConfig = window.config || Twisher.resolveConfig();
+            populateForm(currentConfig);
+            updateProfileDropdown();
+            updateAll();
+        });
     </script>
 </body>
 </html>
-
-<!-- made by pheonix14 -->
+<!-- Made by pheonix14 -->

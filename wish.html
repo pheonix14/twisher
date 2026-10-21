@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Happy Birthday! 🎉</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Wish For You! 🎉</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@900&family=Pacifico&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. Custom Typography --- */
         .font-hero { font-family: 'Montserrat', sans-serif; letter-spacing: -2px; }
         .font-cursive { font-family: 'Dancing Script', cursive; }
         .font-accent { font-family: 'Pacifico', cursive; }
 
-        /* --- 2. Advanced Animations --- */
         @keyframes popIn {
             0% { transform: scale(0) rotate(-10deg); opacity: 0; }
-            70% { transform: scale(1.1) rotate(5deg); }
+            70% { transform: scale(1.08) rotate(3deg); }
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
@@ -30,83 +29,122 @@
         body { 
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
-            animation: bg-glow 15s ease infinite;
+            animation: bg-glow 16s ease infinite;
         }
 
-        .heart { position: absolute; bottom: -100px; animation: floatUp 6s linear infinite; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+        .heart { 
+            position: absolute; 
+            bottom: -100px; 
+            animation: floatUp 7s linear infinite; 
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.6)); 
+        }
+
         @keyframes floatUp { 
             0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 1; }
-            100% { transform: translateY(-130vh) rotate(360deg) scale(1.5); opacity: 0; } 
+            100% { transform: translateY(-130vh) rotate(360deg) scale(1.4); opacity: 0; } 
         }
 
-        /* --- 3. Glass Card --- */
         .glass-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 45px 0 rgba(31, 38, 135, 0.4);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center text-white text-center overflow-hidden transition-all duration-1000">
+<body class="min-h-screen flex flex-col items-center justify-center text-white text-center p-4 overflow-hidden transition-all duration-1000">
 
     <div id="hearts" class="absolute inset-0 pointer-events-none"></div>
 
-    <div class="z-10 p-10 md:p-20 glass-container rounded-[4rem] max-w-3xl mx-4">
+    <div class="z-10 p-8 md:p-16 glass-container rounded-[3rem] md:rounded-[4.5rem] max-w-3xl w-full mx-4 relative">
         
-        <h1 id="wish-title" class="font-hero text-6xl md:text-8xl mb-4 animate-pop italic uppercase leading-tight" style="animation-delay: 0.2s;">
+        <!-- Age / Tag Badge -->
+        <div id="wish-badge" class="inline-block px-5 py-1.5 rounded-full bg-white/20 border border-white/30 text-xs font-bold uppercase tracking-widest mb-6">
+            ✨ Celebratory Moment ✨
+        </div>
+
+        <h1 id="wish-title" class="font-hero text-4xl sm:text-6xl md:text-7xl mb-4 animate-pop italic uppercase leading-tight drop-shadow-lg" style="animation-delay: 0.2s;">
             🎉 HAPPY BIRTHDAY!
         </h1>
 
-        <p id="wish-subtext" class="font-cursive text-3xl md:text-4xl opacity-90 mb-12 animate-pop" style="animation-delay: 0.6s;">
+        <p id="wish-subtext" class="font-cursive text-2xl sm:text-3xl md:text-4xl opacity-95 mb-6 animate-pop drop-shadow" style="animation-delay: 0.5s;">
             You're truly one in a million...
         </p>
 
-        <div class="flex flex-col md:flex-row gap-6 justify-center items-center animate-pop" style="animation-delay: 1s;">
-            <button onclick="navigate('prev')" class="px-10 py-4 rounded-full border-2 border-white/30 hover:bg-white/10 transition-all font-bold uppercase tracking-widest text-xs">
+        <p id="wish-from" class="text-sm font-semibold uppercase tracking-widest opacity-80 mb-10 animate-pop" style="animation-delay: 0.8s;">
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-pop" style="animation-delay: 1s;">
+            <button onclick="navigate('prev')" class="w-full sm:w-auto px-8 py-4 rounded-full border-2 border-white/30 hover:bg-white/10 active:scale-95 transition-all font-bold uppercase tracking-widest text-xs shadow-md">
                 ← Replay
             </button>
-            <button onclick="navigate('next')" class="px-14 py-5 rounded-full bg-white text-black font-black text-lg hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+            <button onclick="navigate('next')" class="w-full sm:w-auto px-12 py-4 rounded-full bg-white text-black font-black text-base hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.45)]">
                 SURPRISE NEXT →
             </button>
         </div>
+
+        <!-- UI Credit -->
+        <div class="mt-8 pt-4 border-t border-white/15 text-xs text-white/60 flex items-center justify-center gap-2">
+            <span>Powered by Twisher</span>
+            <span>•</span>
+            <span>Created by <a href="https://github.com/pheonix14" target="_blank" class="text-white font-bold underline">pheonix14</a></span>
+        </div>
     </div>
 
+    <!-- Engine Scripts -->
     <script src="engine.js"></script>
     <script>
-        // 1. Initial Blast
-        const end = Date.now() + (3 * 1000); // 3 seconds of confetti
+        // 1. Initial Confetti Blast
+        const end = Date.now() + (3.5 * 1000);
         (function frame() {
             confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
             confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
             if (Date.now() < end) requestAnimationFrame(frame);
         }());
 
-        // 2. Continuous Floating Elements
-        const symbols = ['❤️', '✨', '🎈', '🎂', '💖'];
+        // 2. Floating Heart Particles
+        const symbols = ['❤️', '✨', '🎈', '🎂', '💖', '⭐', '🎉'];
         setInterval(() => {
             const h = document.createElement('div'); 
-            h.className = 'heart text-4xl select-none'; 
+            h.className = 'heart text-3xl select-none'; 
             h.innerText = symbols[Math.floor(Math.random() * symbols.length)];
             h.style.left = Math.random() * 100 + 'vw'; 
             h.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            h.style.opacity = Math.random();
+            h.style.opacity = Math.random() * 0.7 + 0.3;
             document.getElementById('hearts').appendChild(h); 
             setTimeout(() => h.remove(), 7000);
-        }, 300);
+        }, 320);
 
-        // 3. Neon Sync (Optional)
-        async function loadCustomWish() {
-            try {
-                const res = await fetch('/.netlify/functions/update-config');
-                const data = await res.json();
-                if(data.custom_wish) document.getElementById('wish-title').innerText = data.custom_wish;
-                if(data.theme_color) document.body.style.background = `linear-gradient(45deg, ${data.theme_color}, #000)`;
-            } catch(e) { console.log("Using default wish settings"); }
+        // 3. Apply Config Personalization
+        function applyWishData() {
+            const cfg = window.config || {};
+
+            // Title
+            if (cfg.wish && cfg.wish !== "HAPPY BIRTHDAY! 🎉") {
+                document.getElementById('wish-title').innerText = cfg.wish;
+            } else if (cfg.name && cfg.name !== "Bestie") {
+                document.getElementById('wish-title').innerText = `🎉 HAPPY BIRTHDAY ${cfg.name.toUpperCase()}!`;
+            }
+
+            // Subtext
+            if (cfg.sub) {
+                document.getElementById('wish-subtext').innerText = cfg.sub;
+            }
+
+            // Age milestone in badge
+            if (cfg.age && cfg.age !== "Special") {
+                document.getElementById('wish-badge').innerText = `✨ Celebrating ${cfg.age} Wonderful Years ✨`;
+            }
+
+            // From
+            if (cfg.from) {
+                document.getElementById('wish-from').innerText = `💌 WITH LOVE FROM ${cfg.from.toUpperCase()}`;
+            }
         }
-        loadCustomWish();
+
+        window.addEventListener('load', applyWishData);
+        if (window.config) applyWishData();
     </script>
 </body>
 </html>
-
-<!-- made by pheonix14 -->
+<!-- Made by pheonix14 -->

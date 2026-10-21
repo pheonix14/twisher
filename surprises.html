@@ -3,184 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Memories</title>
+    <title>Moments & Surprises • Twisher</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;900&display=swap');
-
         body { 
             background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
             font-family: 'Inter', sans-serif;
         }
 
-        /* --- 1. Advanced Animations --- */
         @keyframes entrance {
-            from { opacity: 0; transform: translateY(50px) scale(0.9) rotate(5deg); filter: blur(10px); }
+            from { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); }
             to { opacity: 1; transform: translateY(0) scale(1) rotate(var(--rot)); filter: blur(0); }
         }
 
         .memory-card {
-            animation: entrance 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: entrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             opacity: 0;
-            --rot: 0deg; /* Default */
+            --rot: 0deg;
         }
 
-        /* Float Animation */
-        .anim-float { animation: entrance 1s forwards, drift 4s ease-in-out infinite alternate; }
+        .anim-float { animation: entrance 0.8s forwards, drift 4s ease-in-out infinite alternate; }
         @keyframes drift {
             from { transform: translateY(0) rotate(var(--rot)); }
-            to { transform: translateY(-15px) rotate(calc(var(--rot) + 2deg)); }
-        }
-
-        /* Soft Pulse */
-        .anim-pulse { animation: entrance 1s forwards, heartbeat 3s ease-in-out infinite; }
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1) rotate(var(--rot)); }
-            50% { transform: scale(1.03) rotate(var(--rot)); }
+            to { transform: translateY(-12px) rotate(calc(var(--rot) + 1.5deg)); }
         }
 
         .polaroid-frame {
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+            transition: all 0.35s ease;
         }
 
         .polaroid-frame:hover {
-            transform: scale(1.1) rotate(0deg) !important;
+            transform: scale(1.08) rotate(0deg) !important;
             z-index: 50;
             box-shadow: 0 30px 60px rgba(0,0,0,0.7);
         }
-
-        .admin-drawer {
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
-            backdrop-filter: blur(20px);
-        }
     </style>
 </head>
-<body class="min-h-screen p-8 text-white overflow-x-hidden">
+<body class="min-h-screen p-6 md:p-12 text-white overflow-x-hidden relative">
 
     <div class="max-w-6xl mx-auto">
-        <header class="text-center mb-16 space-y-4">
-            <h1 id="gallery-title" class="text-6xl md:text-8xl font-black italic tracking-tighter opacity-0 translate-y-[-20px] transition-all duration-1000">
-                Memories
+        <header class="text-center mb-16 space-y-3">
+            <h1 id="gallery-title" class="text-5xl md:text-7xl font-black italic tracking-tighter">
+                Our Moments
             </h1>
-            <p class="text-white/40 uppercase tracking-[0.3em] text-[10px] font-bold">Tap background to edit</p>
+            <p id="gallery-author" class="text-white/40 uppercase tracking-[0.25em] text-xs font-bold">
+                Special Moments & Surprises
+            </p>
         </header>
 
-        <div id="memory-container" class="flex flex-wrap gap-12 justify-center pb-32">
-            </div>
-    </div>
-
-    <div id="admin-drawer" class="admin-drawer fixed bottom-0 left-0 right-0 bg-white/90 p-8 rounded-t-[3rem] translate-y-full transition-transform duration-700 z-50 text-slate-900">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="font-black text-2xl uppercase italic tracking-tighter">Gallery Studio</h2>
-                <button onclick="toggleDrawer()" class="bg-slate-200 p-2 rounded-full hover:bg-red-100 transition">✕</button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-4">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Step 1: Content</p>
-                    <input type="text" id="img-url" placeholder="Paste Image/Gif URL..." class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-indigo-500 transition">
-                    <input type="text" id="img-caption" placeholder="Short Caption..." class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-indigo-500 transition">
-                    <button onclick="addMemory()" id="add-btn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black shadow-xl hover:bg-indigo-500 active:scale-95 transition">SYNC TO NEON</button>
-                </div>
-
-                <div class="space-y-4">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Step 2: Customization</p>
-                    <input type="text" id="edit-title" oninput="updateHeading()" placeholder="Change Title..." class="w-full border-2 border-slate-100 p-4 rounded-2xl">
-                    
-                    <select id="edit-anim" onchange="updateStyle()" class="w-full border-2 border-slate-100 p-4 rounded-2xl bg-white appearance-none">
-                        <option value="anim-float">Floating (Drift)</option>
-                        <option value="anim-pulse">Heartbeat (Pulse)</option>
-                        <option value="none">Static (Classic)</option>
-                    </select>
-
-                    <button onclick="clearAll()" class="w-full text-red-500 text-xs font-bold uppercase tracking-widest pt-4">Wipe All Records</button>
-                </div>
-            </div>
+        <div id="memory-container" class="flex flex-wrap gap-10 justify-center pb-24">
+            <!-- Dynamic memories -->
         </div>
+
+        <div class="flex justify-center gap-4 pb-16">
+            <button onclick="navigate('prev')" class="px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider transition">
+                ← Back
+            </button>
+            <button onclick="navigate('next')" class="px-10 py-3.5 rounded-full bg-white text-slate-900 font-black text-xs uppercase tracking-wider hover:scale-105 active:scale-95 transition shadow-xl">
+                Continue →
+            </button>
+        </div>
+
+        <footer class="text-center text-xs text-white/40 pb-8 border-t border-white/10 pt-6">
+            <p>Twisher • Designed by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a></p>
+        </footer>
     </div>
 
+    <!-- Engine Scripts -->
+    <script src="engine.js"></script>
     <script>
-        const API_URL = '/.netlify/functions/update-config';
-        const AUTH_TOKEN = sessionStorage.getItem('admin_token');
-
-        // Toggle Logic
-        window.onclick = (e) => {
-            if (e.target.tagName === 'BODY' || e.target.id === 'gallery-title') {
-                if (AUTH_TOKEN === "pheonix14" || prompt("Admin Pass:") === "pheonix14") {
-                    sessionStorage.setItem('admin_token', 'pheonix14');
-                    toggleDrawer();
-                }
-            }
-        };
-
-        function toggleDrawer() {
-            document.getElementById('admin-drawer').classList.toggle('translate-y-full');
-        }
-
-        // Fetch & Render
-        async function renderGallery() {
+        function renderGallery() {
+            const cfg = window.config || {};
             const container = document.getElementById('memory-container');
-            const res = await fetch(API_URL);
-            const data = await res.json();
 
-            // Set Title
             const title = document.getElementById('gallery-title');
-            title.innerText = data.gallery_title || "Our Moments";
-            title.classList.remove('opacity-0', 'translate-y-[-20px]');
+            if (cfg.name && cfg.name !== "Bestie") {
+                title.innerText = `Moments with ${cfg.name}`;
+            }
 
-            const animClass = data.gallery_anim || 'anim-float';
-            const memories = data.memories || []; // Expecting JSONB array from Neon
+            const memories = cfg.memories || [];
+            
+            if (memories.length === 0) {
+                container.innerHTML = `<p class="text-white/40 italic">No memories attached to this link yet.</p>`;
+                return;
+            }
 
             container.innerHTML = memories.map((m, i) => {
-                // Random rotation for organic feel
                 const rotation = (Math.random() * 6 - 3).toFixed(2); 
                 return `
-                    <div class="memory-card ${animClass} polaroid-frame bg-white p-4 pb-8" 
-                         style="animation-delay: ${i * 0.15}s; --rot: ${rotation}deg;">
-                        <div class="w-64 h-64 overflow-hidden bg-slate-100">
-                            <img src="${m.src}" class="w-full h-full object-cover">
+                    <div class="memory-card anim-float polaroid-frame bg-white p-4 pb-6 rounded-2xl" 
+                         style="animation-delay: ${i * 0.12}s; --rot: ${rotation}deg;">
+                        <div class="w-64 h-64 overflow-hidden rounded-xl bg-slate-100 mb-4">
+                            <img src="${m.src}" alt="Moment" class="w-full h-full object-cover">
                         </div>
-                        <p class="text-slate-800 font-bold italic text-center text-xl mt-6 font-serif" 
+                        <p class="text-slate-800 font-bold italic text-center text-xl font-serif" 
                            style="font-family: 'Dancing Script', cursive;">
-                           ${m.caption}
+                           ${escapeHtml(m.caption || 'Cherished moment')}
                         </p>
                     </div>
                 `;
             }).join('');
         }
 
-        // Database Sync Functions
-        async function addMemory() {
-            const btn = document.getElementById('add-btn');
-            const src = document.getElementById('img-url').value;
-            const caption = document.getElementById('img-caption').value;
-            
-            if(!src) return;
-            btn.innerText = "UPLOADING...";
-
-            // 1. Get current data
-            const res = await fetch(API_URL);
-            const current = await res.json();
-            const memories = current.memories || [];
-            
-            // 2. Add new
-            memories.push({ src, caption });
-
-            // 3. Save back to Neon
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'pheonix14' },
-                body: JSON.stringify({ memories })
-            });
-
-            location.reload();
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        renderGallery();
+        window.addEventListener('load', renderGallery);
+        if (window.config) renderGallery();
     </script>
 </body>
 </html>
-
-<!-- made by pheonix14 -->
+<!-- Made by pheonix14 -->
