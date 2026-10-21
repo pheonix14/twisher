@@ -1,13 +1,13 @@
-# Twisher 🎉
+# Twisher 
 
 > **Wishes you and people you want with a fully customizable surprise.**  
-> Crafted with 💖 by **[pheonix14](https://github.com/pheonix14)**
+> Crafted with  by **[pheonix14](https://github.com/pheonix14)**
 
-🌐 **Live GitHub Pages URL:** [https://pheonix14.github.io/twisher/](https://pheonix14.github.io/twisher/)
+ **Live GitHub Pages URL:** [https://pheonix14.github.io/twisher/](https://pheonix14.github.io/twisher/)
 
 ---
 
-## ⚡ Zero-Database URL Architecture (Designed for 100s of Users)
+##  Zero-Database URL Architecture (Designed for 100s of Users)
 
 Twisher runs **100% statically on GitHub Pages** without requiring any external database, backend server, or cloud storage:
 - **No Database Needed:** Each surprise is encoded directly into the shareable link (via human-readable query parameters and compressed URL-safe base64 state).
@@ -17,18 +17,18 @@ Twisher runs **100% statically on GitHub Pages** without requiring any external 
 
 ---
 
-## 🚀 Features
+##  Features
 
-- ⏱️ **Live Countdown Timer (`index.html`):** Unlocks on the recipient's birthday or milestone.
-- 🎮 **Retro Pixel Cake Mini-Game (`game.html`):** Tap to light the candle on a handheld pixel console.
-- 🎂 **Confetti & Floating Hearts Wish (`wish.html`):** Vibrant animations with personalized celebration headline and subtext.
-- 💀 **Surprise Jumpscare (`jumpscare.html`):** Heart-pounding surprise with suspense delay and screen shake (can also be toggled off).
-- 📸 **Polaroid Memories Showcase (`gallery.html` & `surprises.html`):** Interactive polaroids with custom captions and images.
-- ⚙️ **Twisher Studio Admin (`admin.html`):** Live configuration editor, preset palette picker, memory manager, draggable journey order, profile manager, and 1-click shareable link generator with WhatsApp integration.
+- ️ **Live Countdown Timer (`index.html`):** Unlocks on the recipient's birthday or milestone.
+-  **Retro Pixel Cake Mini-Game (`game.html`):** Tap to light the candle on a handheld pixel console.
+-  **Confetti & Floating Hearts Wish (`wish.html`):** Vibrant animations with personalized celebration headline and subtext.
+-  **Surprise Jumpscare (`jumpscare.html`):** Heart-pounding surprise with suspense delay and screen shake (can also be toggled off).
+-  **Polaroid Memories Showcase (`gallery.html` & `surprises.html`):** Interactive polaroids with custom captions and images.
+- Settings **Twisher Studio Admin (`admin.html`):** Live configuration editor, preset palette picker, memory manager, draggable journey order, profile manager, and 1-click shareable link generator with WhatsApp integration.
 
 ---
 
-## 🔗 Quick URL Parameters
+##  Quick URL Parameters
 
 You can also craft or modify links directly:
 
@@ -48,7 +48,7 @@ You can also craft or modify links directly:
 
 ---
 
-## 🛠️ Credits & Author
+## ️ Credits & Author
 
 Created and maintained by **pheonix14**.  
 Licensed under MIT.

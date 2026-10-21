@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Wish For You! 🎉</title>
+    <title>A Special Wish For You! </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@900&family=Pacifico&display=swap" rel="stylesheet">
@@ -60,11 +60,11 @@
         
         <!-- Age / Tag Badge -->
         <div id="wish-badge" class="inline-block px-5 py-1.5 rounded-full bg-white/20 border border-white/30 text-xs font-bold uppercase tracking-widest mb-6">
-            ✨ Celebratory Moment ✨
+             Celebratory Moment 
         </div>
 
         <h1 id="wish-title" class="font-hero text-4xl sm:text-6xl md:text-7xl mb-4 animate-pop italic uppercase leading-tight drop-shadow-lg" style="animation-delay: 0.2s;">
-            🎉 HAPPY BIRTHDAY!
+             HAPPY BIRTHDAY!
         </h1>
 
         <p id="wish-subtext" class="font-cursive text-2xl sm:text-3xl md:text-4xl opacity-95 mb-6 animate-pop drop-shadow" style="animation-delay: 0.5s;">
@@ -103,7 +103,7 @@
         }());
 
         // 2. Floating Heart Particles
-        const symbols = ['❤️', '✨', '🎈', '🎂', '💖', '⭐', '🎉'];
+        const symbols = ['', '', '', '', '', '', ''];
         setInterval(() => {
             const h = document.createElement('div'); 
             h.className = 'heart text-3xl select-none'; 
@@ -120,10 +120,10 @@
             const cfg = window.config || {};
 
             // Title
-            if (cfg.wish && cfg.wish !== "HAPPY BIRTHDAY! 🎉") {
+            if (cfg.wish && cfg.wish !== "HAPPY BIRTHDAY! ") {
                 document.getElementById('wish-title').innerText = cfg.wish;
             } else if (cfg.name && cfg.name !== "Bestie") {
-                document.getElementById('wish-title').innerText = `🎉 HAPPY BIRTHDAY ${cfg.name.toUpperCase()}!`;
+                document.getElementById('wish-title').innerText = ` HAPPY BIRTHDAY ${cfg.name.toUpperCase()}!`;
             }
 
             // Subtext
@@ -133,12 +133,12 @@
 
             // Age milestone in badge
             if (cfg.age && cfg.age !== "Special") {
-                document.getElementById('wish-badge').innerText = `✨ Celebrating ${cfg.age} Wonderful Years ✨`;
+                document.getElementById('wish-badge').innerText = ` Celebrating ${cfg.age} Wonderful Years `;
             }
 
             // From
             if (cfg.from) {
-                document.getElementById('wish-from').innerText = `💌 WITH LOVE FROM ${cfg.from.toUpperCase()}`;
+                document.getElementById('wish-from').innerText = ` WITH LOVE FROM ${cfg.from.toUpperCase()}`;
             }
         }
 

@@ -95,7 +95,7 @@
 </head>
 <body class="min-h-screen p-4 md:p-8">
 
-    <div id="toast" class="toast-notify">✨ Link Copied to Clipboard!</div>
+    <div id="toast" class="toast-notify"> Link Copied to Clipboard!</div>
 
     <div class="max-w-6xl mx-auto space-y-8">
         
@@ -105,7 +105,7 @@
             
             <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2">
-                    <span>⚡</span> Zero-Database URL Architecture
+                    <span></span> Zero-Database URL Architecture
                 </div>
                 <h1 class="text-3xl md:text-4xl font-black italic tracking-tight uppercase text-white flex items-center gap-3">
                     Twisher Studio
@@ -117,7 +117,7 @@
 
             <div class="flex items-center gap-3">
                 <a href="index.html" id="back-home-btn" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition flex items-center gap-2">
-                    <span>👁️ Preview</span>
+                    <span>Preview Preview</span>
                 </a>
             </div>
         </header>
@@ -127,7 +127,7 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                 <div>
                     <h2 class="text-lg font-black uppercase tracking-tight text-white flex items-center gap-2">
-                        <span>🔗</span> Unique Sharable Link For Recipient
+                        <span></span> Unique Sharable Link For Recipient
                     </h2>
                     <p class="text-xs text-white/60">
                         Everything (Name, Age, Wish, Countdown, Colors, Photos) is stored safely in this link. Send it to anyone on any browser!
@@ -144,20 +144,20 @@
             <div class="flex flex-col sm:flex-row gap-2 mb-4">
                 <input type="text" id="shareable-url-input" readonly onclick="this.select()" class="custom-input code-font text-xs bg-slate-950 border-indigo-500/40 text-indigo-200 select-all py-3.5">
                 <button onclick="copyShareableUrl()" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-lg shrink-0 flex items-center justify-center gap-2">
-                    <span>📋</span> Copy Link
+                    <span></span> Copy Link
                 </button>
             </div>
 
             <!-- Quick Action Row -->
             <div class="flex flex-wrap items-center gap-3 pt-2">
                 <button onclick="shareOnWhatsApp()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
-                    <span>💬</span> Share via WhatsApp
+                    <span></span> Share via WhatsApp
                 </button>
                 <button onclick="openShareableUrl()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                    <span>🚀</span> Test in New Tab
+                    <span></span> Test in New Tab
                 </button>
                 <button onclick="saveCurrentProfile()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                    <span>💾</span> Save to My Profiles
+                    <span></span> Save to My Profiles
                 </button>
                 <div class="ml-auto flex items-center gap-2">
                     <label class="text-xs text-white/40">Switch Profile:</label>
@@ -174,7 +174,7 @@
             <!-- 1. PERSON & MESSAGE -->
             <div class="section-card space-y-4">
                 <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-indigo-400">👤</span>
+                    <span class="text-indigo-400"></span>
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">1. Recipient & Message</h3>
                 </div>
 
@@ -195,7 +195,7 @@
 
                 <div>
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Wish Headline</label>
-                    <input type="text" id="cfg-wish" placeholder="🎉 HAPPY BIRTHDAY!" oninput="updateAll()" class="custom-input">
+                    <input type="text" id="cfg-wish" placeholder=" HAPPY BIRTHDAY!" oninput="updateAll()" class="custom-input">
                 </div>
 
                 <div>
@@ -207,7 +207,7 @@
             <!-- 2. COUNTDOWN & VISUAL THEME -->
             <div class="section-card space-y-4">
                 <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-pink-400">🎨</span>
+                    <span class="text-pink-400"></span>
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">2. Countdown & Theme</h3>
                 </div>
 
@@ -236,9 +236,9 @@
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Custom Background Image URL</label>
                     <input type="text" id="cfg-bg" placeholder="Paste image URL (Unsplash, Imgur...)" oninput="updateAll()" class="custom-input text-xs">
                     <div class="flex gap-1.5 mt-2 flex-wrap">
-                        <span onclick="setBg('https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1600')" class="preset-chip">🎉 Confetti</span>
-                        <span onclick="setBg('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600')" class="preset-chip">🎈 Balloons</span>
-                        <span onclick="setBg('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=1600')" class="preset-chip">✨ Stars</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1600')" class="preset-chip"> Confetti</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600')" class="preset-chip"> Balloons</span>
+                        <span onclick="setBg('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=1600')" class="preset-chip"> Stars</span>
                         <span onclick="setBg('')" class="preset-chip text-red-400">Clear</span>
                     </div>
                 </div>
@@ -247,7 +247,7 @@
             <!-- 3. MEDIA (MUSIC, POPUP, JUMPSCARE) -->
             <div class="section-card space-y-4">
                 <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-amber-400">🎵</span>
+                    <span class="text-amber-400"></span>
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">3. Audio & Special Effects</h3>
                 </div>
 
@@ -255,9 +255,9 @@
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Background Music Audio URL</label>
                     <input type="text" id="cfg-music" placeholder="Audio URL (.mp3 / .ogg)" oninput="updateAll()" class="custom-input text-xs">
                     <div class="flex gap-1.5 mt-2 flex-wrap">
-                        <span onclick="setMusic('https://cdn.freesound.org/previews/456/456965_5121236-lq.mp3')" class="preset-chip">🎺 Celebration</span>
-                        <span onclick="setMusic('https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3')" class="preset-chip">🎉 Party Tune</span>
-                        <span onclick="setMusic('https://cdn.freesound.org/previews/566/566384_6142149-lq.mp3')" class="preset-chip">🎸 Acoustic</span>
+                        <span onclick="setMusic('https://cdn.freesound.org/previews/456/456965_5121236-lq.mp3')" class="preset-chip"> Celebration</span>
+                        <span onclick="setMusic('https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3')" class="preset-chip"> Party Tune</span>
+                        <span onclick="setMusic('https://cdn.freesound.org/previews/566/566384_6142149-lq.mp3')" class="preset-chip"> Acoustic</span>
                         <span onclick="setMusic('')" class="preset-chip text-red-400">Mute</span>
                     </div>
                 </div>
@@ -266,21 +266,21 @@
                     <label class="text-[11px] text-white/60 block mb-1 font-bold uppercase">Floating Mascot / Video Popup URL</label>
                     <input type="text" id="cfg-popup" placeholder="GIF or MP4 URL" oninput="updateAll()" class="custom-input text-xs">
                     <div class="flex gap-1.5 mt-2 flex-wrap">
-                        <span onclick="setPopup('https://media.giphy.com/media/blSTtZehjAZ8I/giphy.gif')" class="preset-chip">🐶 Party Dog</span>
-                        <span onclick="setPopup('https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif')" class="preset-chip">🐱 Confetti Cat</span>
+                        <span onclick="setPopup('https://media.giphy.com/media/blSTtZehjAZ8I/giphy.gif')" class="preset-chip"> Party Dog</span>
+                        <span onclick="setPopup('https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif')" class="preset-chip"> Confetti Cat</span>
                         <span onclick="setPopup('')" class="preset-chip text-red-400">None</span>
                     </div>
                 </div>
 
                 <div class="p-3 bg-red-950/20 border border-red-900/40 rounded-2xl space-y-2">
                     <div class="flex items-center justify-between">
-                        <label class="text-[11px] text-red-300 font-bold uppercase">💀 Jumpscare Feature</label>
+                        <label class="text-[11px] text-red-300 font-bold uppercase"> Jumpscare Feature</label>
                         <input type="checkbox" id="cfg-scare-enabled" checked onchange="updateAll()" class="w-4 h-4 accent-red-500 cursor-pointer">
                     </div>
                     <input type="text" id="cfg-scare" placeholder="Jumpscare image/video URL" oninput="updateAll()" class="custom-input text-xs">
                     <div class="flex gap-1.5 flex-wrap">
-                        <span onclick="setScare('https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=800')" class="preset-chip">🎃 Spooky Pumpkin</span>
-                        <span onclick="setScare('https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?w=800')" class="preset-chip">👻 Ghost Face</span>
+                        <span onclick="setScare('https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=800')" class="preset-chip"> Spooky Pumpkin</span>
+                        <span onclick="setScare('https://images.unsplash.com/photo-1508361001413-7a9dca21d08a?w=800')" class="preset-chip"> Ghost Face</span>
                     </div>
                 </div>
             </div>
@@ -289,7 +289,7 @@
             <div class="section-card md:col-span-2 space-y-4">
                 <div class="flex items-center justify-between border-b border-white/10 pb-3">
                     <div class="flex items-center gap-2">
-                        <span class="text-emerald-400">📸</span>
+                        <span class="text-emerald-400"></span>
                         <h3 class="text-xs font-black text-white uppercase tracking-wider">4. Memories Gallery (Polaroids)</h3>
                     </div>
                     <button onclick="addMemoryPrompt()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition">
@@ -317,7 +317,7 @@
             <!-- 5. JOURNEY FLOW (DRAGGABLE) -->
             <div class="section-card space-y-4">
                 <div class="flex items-center gap-2 border-b border-white/10 pb-3">
-                    <span class="text-purple-400">🔀</span>
+                    <span class="text-purple-400"></span>
                     <h3 class="text-xs font-black text-white uppercase tracking-wider">5. Drag Page Order</h3>
                 </div>
 
@@ -325,19 +325,19 @@
 
                 <ul id="page-list" class="space-y-2">
                     <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="index.html">
-                        <span>🏠 1. Home Countdown</span> <span>⠿</span>
+                        <span> 1. Home Countdown</span> <span>⠿</span>
                     </li>
                     <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="game.html">
-                        <span>🎮 2. Pixel Wish Cake</span> <span>⠿</span>
+                        <span> 2. Pixel Wish Cake</span> <span>⠿</span>
                     </li>
                     <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="wish.html">
-                        <span>🎂 3. Big Confetti Wish</span> <span>⠿</span>
+                        <span> 3. Big Confetti Wish</span> <span>⠿</span>
                     </li>
                     <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="jumpscare.html">
-                        <span>💀 4. Surprise Jumpscare</span> <span>⠿</span>
+                        <span> 4. Surprise Jumpscare</span> <span>⠿</span>
                     </li>
                     <li class="p-3 bg-slate-950/80 border border-white/10 rounded-xl flex justify-between items-center text-xs font-bold cursor-move shadow-sm hover:border-indigo-500 transition" data-id="gallery.html">
-                        <span>📸 5. Photo Polaroids</span> <span>⠿</span>
+                        <span> 5. Photo Polaroids</span> <span>⠿</span>
                     </li>
                 </ul>
             </div>
@@ -347,7 +347,7 @@
         <footer class="p-8 bg-slate-900/60 rounded-[28px] border border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
             <div>
                 <p class="font-bold text-white flex items-center gap-2">
-                    Twisher Studio Engine • Created with 💖 by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a>
+                    Twisher Studio Engine • Created by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a>
                 </p>
                 <p class="text-[11px] text-white/40 mt-1">
                     100% Serverless & Zero-Database Architecture • Hosted on GitHub Pages
@@ -358,7 +358,7 @@
                     Reset to Defaults
                 </button>
                 <button onclick="copyShareableUrl()" class="bg-white text-slate-900 font-black px-6 py-2.5 rounded-full hover:scale-105 active:scale-95 transition shadow-lg">
-                    Copy Share Link 🔗
+                    Copy Share Link 
                 </button>
             </div>
         </footer>
@@ -419,7 +419,7 @@
             const urlInput = document.getElementById('new-mem-url');
             const capInput = document.getElementById('new-mem-cap');
             const url = urlInput.value.trim();
-            const cap = capInput.value.trim() || 'A cherished memory ✨';
+            const cap = capInput.value.trim() || 'A cherished memory ';
 
             if (!url) {
                 alert("Please provide an image URL first!");
@@ -433,7 +433,7 @@
             
             renderMemoriesList();
             updateAll();
-            showToast("📸 Memory Added to Link!");
+            showToast(" Memory Added to Link!");
         }
 
         function removeMemory(index) {
@@ -459,7 +459,7 @@
                         <p class="text-xs font-bold truncate text-white">${escapeHtml(m.caption)}</p>
                         <p class="text-[10px] text-white/40 truncate">${escapeHtml(m.src)}</p>
                     </div>
-                    <button onclick="removeMemory(${idx})" class="text-red-400 hover:text-red-300 p-1 text-xs" title="Remove">✕</button>
+                    <button onclick="removeMemory(${idx})" class="text-red-400 hover:text-red-300 p-1 text-xs" title="Remove"></button>
                 </div>
             `).join('');
         }
@@ -500,10 +500,10 @@
             input.select();
             input.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(input.value).then(() => {
-                showToast("📋 Link Copied! Send it to your friend.");
+                showToast(" Link Copied! Send it to your friend.");
             }).catch(() => {
                 document.execCommand('copy');
-                showToast("📋 Link Copied!");
+                showToast(" Link Copied!");
             });
         }
 
@@ -543,7 +543,7 @@
             profiles[name] = currentConfig;
             localStorage.setItem('twisher_saved_profiles', JSON.stringify(profiles));
             updateProfileDropdown();
-            showToast(`💾 Saved profile "${name}"!`);
+            showToast(` Saved profile "${name}"!`);
         }
 
         function updateProfileDropdown() {
@@ -565,7 +565,7 @@
                 currentConfig = profiles[name];
                 populateForm(currentConfig);
                 updateAll();
-                showToast(`📂 Loaded profile "${name}"!`);
+                showToast(` Loaded profile "${name}"!`);
             }
         }
 

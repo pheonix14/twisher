@@ -30,7 +30,7 @@
     <!-- Header -->
     <header class="text-center mb-12">
         <div class="inline-block px-4 py-1 rounded-full bg-white/10 border border-white/15 text-xs uppercase font-bold tracking-widest text-indigo-300 mb-3">
-            📸 Snapshot Collection
+             Snapshot Collection
         </div>
         <h1 id="gallery-header" class="text-4xl md:text-6xl font-black italic tracking-tighter">
             OUR MEMORIES
@@ -54,13 +54,13 @@
             Restart Journey ↺
         </button>
         <a id="edit-memories-link" href="admin.html" class="px-6 py-4 rounded-full bg-indigo-600/80 hover:bg-indigo-600 text-white transition text-xs font-bold uppercase tracking-wider">
-            ⚙️ Edit in Studio
+            Settings Edit in Studio
         </a>
     </div>
 
     <!-- UI Credit Section -->
     <footer class="text-center text-xs text-white/40 pb-10">
-        <p>Twisher Memories Engine • Handcrafted with 💖 by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a></p>
+        <p>Twisher Memories Engine • Crafted by <a href="https://github.com/pheonix14" target="_blank" class="text-indigo-400 font-bold hover:underline">pheonix14</a></p>
     </footer>
 
     <!-- Engine Scripts -->
@@ -80,7 +80,7 @@
             if (memories.length === 0) {
                 grid.innerHTML = `
                     <div class="text-center p-12 bg-white/5 rounded-3xl border border-white/10 max-w-md mx-auto">
-                        <p class="text-4xl mb-4">📷</p>
+                        <p class="text-4xl mb-4"></p>
                         <h3 class="text-xl font-bold mb-2">No Memories Added Yet</h3>
                         <p class="text-xs text-white/50 mb-6">Open Studio Admin to attach sweet photo moments to this surprise link!</p>
                         <a href="admin.html${window.location.search}${window.location.hash}" class="inline-block bg-white text-black px-6 py-3 rounded-full font-bold text-xs">
@@ -95,7 +95,7 @@
 
             grid.innerHTML = memories.map((m, i) => {
                 const rot = rotations[i % rotations.length];
-                const caption = m.caption || 'Unforgettable memory ✨';
+                const caption = m.caption || 'Unforgettable memory ';
                 const imgSrc = m.src || 'https://placehold.co/600x450/1e293b/ffffff?text=Twisher+Memory';
 
                 return `

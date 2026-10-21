@@ -14,7 +14,7 @@ const DEFAULT_CONFIG = {
     name: "Bestie",
     age: "Special",
     from: "pheonix14",
-    wish: "HAPPY BIRTHDAY! 🎉",
+    wish: "HAPPY BIRTHDAY! ",
     sub: "You're truly one in a million... Wishing you endless joy, laughter & adventure!",
     targetDate: "2026-12-31T00:00",
     themeColor: "#6366f1",
@@ -25,9 +25,9 @@ const DEFAULT_CONFIG = {
     showJumpscare: true,
     pageOrder: DEFAULT_ORDER,
     memories: [
-        { src: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800", caption: "Every moment is a memory worth celebrating ✨" },
-        { src: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800", caption: "Cheers to another chapter of awesomeness 🎂" },
-        { src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800", caption: "May all your dreams take flight! 🎈" }
+        { src: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800", caption: "Every moment is a memory worth celebrating " },
+        { src: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800", caption: "Cheers to another chapter of awesomeness " },
+        { src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800", caption: "May all your dreams take flight! " }
     ]
 };
 
@@ -214,7 +214,7 @@ function initMedia(cfg) {
             <div style="position:fixed; bottom:60px; left:16px; width:150px; z-index:9990; 
                         border:2px solid rgba(255,255,255,0.4); border-radius:16px; overflow:hidden; 
                         box-shadow: 0 10px 25px rgba(0,0,0,0.6); background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);">
-                <button onclick="this.parentElement.remove()" style="position:absolute; top:4px; right:6px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:11px; cursor:pointer; z-index:10;">✕</button>
+                <button onclick="this.parentElement.remove()" style="position:absolute; top:4px; right:6px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:11px; cursor:pointer; z-index:10;"></button>
                 ${cfg.popupVid.match(/\.(mp4|webm|ogg|mov)$/i) ? 
                     `<video src="${cfg.popupVid}" autoplay loop muted playsinline style="width:100%; display:block;"></video>` :
                     `<img src="${cfg.popupVid}" style="width:100%; display:block; object-fit:cover;" />`
@@ -229,7 +229,7 @@ function createMusicControl() {
     const btn = document.createElement('button');
     btn.id = 'twisher-music-toggle';
     btn.setAttribute('title', 'Toggle Music');
-    btn.innerHTML = '🎵';
+    btn.innerHTML = '';
     btn.style.cssText = `
         position: fixed;
         bottom: 14px;
@@ -251,10 +251,10 @@ function createMusicControl() {
         if (!audio) return;
         if (audio.paused) {
             audio.play();
-            btn.innerHTML = '🎵 Playing';
+            btn.innerHTML = ' Playing';
         } else {
             audio.pause();
-            btn.innerHTML = '🔇 Muted';
+            btn.innerHTML = ' Muted';
         }
     };
     document.body.appendChild(btn);
@@ -263,7 +263,7 @@ function createMusicControl() {
 function updateMusicBadge(isPlaying) {
     const btn = document.getElementById('twisher-music-toggle');
     if (btn) {
-        btn.innerHTML = isPlaying ? '🎵 Playing' : '🎵 Tap to Play';
+        btn.innerHTML = isPlaying ? ' Playing' : ' Tap to Play';
     }
 }
 
@@ -308,7 +308,7 @@ function injectPhoenixCredit() {
     badge.innerHTML = `
         <span style="opacity:0.75;">Twisher</span>
         <span style="opacity:0.4;">•</span>
-        <span>Made with 💖 by <a href="https://github.com/pheonix14" target="_blank" rel="noopener" style="color:#818cf8; font-weight:700; text-decoration:none; border-bottom:1px solid rgba(129,140,248,0.5);">pheonix14</a></span>
+        <span>Made by <a href="https://github.com/pheonix14" target="_blank" rel="noopener" style="color:#818cf8; font-weight:700; text-decoration:none; border-bottom:1px solid rgba(129,140,248,0.5);">pheonix14</a></span>
     `;
     badge.style.cssText = `
         position: fixed;
